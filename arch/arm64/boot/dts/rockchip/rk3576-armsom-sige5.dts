@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright (c) 2024 Rockchip Electronics Co., Ltd.
+ * rk3576-evb1-v10-linux.dts
+ */
+
+/dts-v1/;
+
+#include "rk3576-armsom-sige5.dtsi"
+#include "rk3576-armsom-sige5-camera-ov13850.dtsi"
+//#include "rk3576-armsom-sige5-display-10hd.dtsi"
+#include "rk3576-linux.dtsi"
+
+/ {
+	model = "Rockchip armsom sige5 Board";
+	compatible = "armsom,sige5", "rockchip,rk3576";
+};
