@@ -13,7 +13,7 @@
 #include <dt-bindings/display/rockchip_vop.h>
 #include "rk3576-armsom-cm5.dtsi"
 #include "rk3576-linux.dtsi"
-#include "rk3576-armsom-cm5-camera-ov13850.dtsi"
+// #include "rk3576-armsom-cm5-camera-ov13850.dtsi"
 
 / {
 	model = "ArmSoM CM5 IO";
