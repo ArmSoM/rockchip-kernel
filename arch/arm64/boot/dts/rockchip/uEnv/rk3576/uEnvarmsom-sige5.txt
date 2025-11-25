@@ -1,0 +1,11 @@
+uname_r=
+size=0x1000000
+cmdline="earlyprintk console=ttyFIQ0 console=tty1 consoleblank=0 loglevel=7 rootwait rw rootfstype=ext4"
+
+enable_uboot_overlays=1
+#overlay_start
+
+#RS232
+#dtoverlay=/dtb/overlay/armsom-rk3576-uart8-m2-overlay.dtbo
+
+#overlay_end
