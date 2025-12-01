@@ -8,4 +8,8 @@ enable_uboot_overlays=1
 #RS232
 #dtoverlay=/dtb/overlay/armsom-rk3576-uart8-m2-overlay.dtbo
 
+#camera
+#dtoverlay=/dtb/overlay/armsom-sige5-camera-ov13850-cs0.dtbo
+#dtoverlay=/dtb/overlay/armsom-sige5-camera-ov13850-cs1.dtbo
+
 #overlay_end

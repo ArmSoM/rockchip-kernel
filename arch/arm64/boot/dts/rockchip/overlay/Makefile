@@ -28,6 +28,8 @@ dtbo-$(CONFIG_CPU_RK3576) += \
 	armsom-rk3576-uart6-m0-overlay.dtbo \
 	armsom-rk3576-uart7-m0-overlay.dtbo \
 	armsom-rk3576-uart8-m2-overlay.dtbo \
+	armsom-sige5-camera-ov13850-cs0.dtbo \
+	armsom-sige5-camera-ov13850-cs1.dtbo
 
 endif
 
