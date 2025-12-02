@@ -18,9 +18,7 @@
 
 / {
 	model = "ArmSoM Sige5";
-	compatible = "armsom,sige5", "rockchip,rk3576";
-
-	/delete-node/ chosen;
+	compatible = "rockchip,rk3588-armsom-sige5", "rockchip,rk3576";
 
 	dp0_sound: dp0-sound {
 		compatible = "rockchip,hdmi";

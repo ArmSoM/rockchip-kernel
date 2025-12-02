@@ -16,7 +16,7 @@
 
 / {
 	model = "ArmSoM CM5 IO";
-	compatible = "armsom,cm5-io", "rockchip,rk3576";
+	compatible = "rockchip,rk3588-armsom-cm5-io", "rockchip,rk3576";
 
 	dp0_sound: dp0-sound {
 		compatible = "rockchip,hdmi";
