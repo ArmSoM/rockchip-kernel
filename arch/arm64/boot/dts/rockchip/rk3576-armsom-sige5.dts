@@ -312,6 +312,10 @@
 	status = "okay";
 };
 
+&dp0_sound {
+	status = "okay";
+};
+
 &gmac0 {
 	/* Use rgmii-rxid mode to disable rx delay inside Soc */
 	phy-mode = "rgmii-rxid";
@@ -699,6 +703,11 @@
 	>;
 };
 
+&route_dp0 {
+	status = "okay";
+	connect = <&vp2_out_dp0>;
+};
+
 &route_hdmi {
 	status = "okay";
 	connect = <&vp0_out_hdmi>;
@@ -868,8 +877,7 @@
 };
 
 &vp2 {
-	assigned-clocks = <&cru DCLK_VP2_SRC>;
-	assigned-clock-parents = <&cru PLL_VPLL>;
+	status = "okay";
 };
 
 /* watchdog */

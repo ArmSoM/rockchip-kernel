@@ -263,12 +263,14 @@
 		target = <&dsi_in_vp1>;
 		__overlay__ {
 			status = "okay";
+
 		};
 	};
 
 	fragment@6 {
 		target = <&vp1>;
 		__overlay__ {
+			status = "okay";
 			assigned-clocks = <&cru DCLK_VP1_SRC>;
 			assigned-clock-parents = <&cru PLL_VPLL>;
 		};
