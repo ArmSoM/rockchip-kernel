@@ -52,12 +52,42 @@ dtbo-$(CONFIG_CPU_RK3576) += \
 	rk3576-armsom-dp-disabled-overlay.dtbo \
 	rk3576-armsom-sige5-camera-ov13850-cs0-overlay.dtbo \
 	rk3576-armsom-sige5-camera-ov13850-cs1-overlay.dtbo \
-	rk3576-armsom-sige5-display-1200x1900-10.1hd-overlay.dtbo \
-	rk3576-armsom-sige7-camera-imx415-4k-overlay.dtbo \
-	rk3576-armsom-sige7-camera-ov13850-csi0-overlay.dtbo \
-	rk3576-armsom-sige7-camera-ov13850-csi1-overlay.dtbo \
-	rk3576-armsom-sige7-display-1200x1900-10.1hd-overlay.dtbo \
+	rk3576-armsom-sige5-display-1200x1900-10.1hd-overlay.dtbo 
 
+dtbo-$(CONFIG_CPU_RK3588) += \
+	rk3588-armsom-can1-m0.dtbo \
+	rk3588-armsom-can1-m1.dtbo \
+	rk3588-armsom-i2c0-m1.dtbo \
+	rk3588-armsom-i2c1-m0.dtbo \
+	rk3588-armsom-i2c3-m1.dtbo \
+	rk3588-armsom-i2c7-m3.dtbo \
+	rk3588-armsom-i2c8-m4.dtbo \
+	rk3588-armsom-pwm2-m1.dtbo \
+	rk3588-armsom-pwm3-m1.dtbo \
+	rk3588-armsom-pwm5-m2.dtbo \
+	rk3588-armsom-pwm6-m2.dtbo \
+	rk3588-armsom-pwm7-m3.dtbo \
+	rk3588-armsom-pwm8-m0.dtbo \
+	rk3588-armsom-pwm12-m0.dtbo \
+	rk3588-armsom-pwm13-m0.dtbo \
+	rk3588-armsom-pwm13-m2.dtbo \
+	rk3588-armsom-pwm14-m0.dtbo \
+	rk3588-armsom-pwm14-m1.dtbo \
+	rk3588-armsom-pwm15-m0.dtbo \
+	rk3588-armsom-pwm15-m1.dtbo \
+	rk3588-armsom-pwm15-m2.dtbo \
+	rk3588-armsom-spi0-m2-cs0-cs1-spidev.dtbo \
+	rk3588-armsom-spi1-m1-cs0-spidev.dtbo \
+	rk3588-armsom-sige7-camera-imx415-4k-overlay.dtbo \
+	rk3588-armsom-sige7-camera-ov13850-csi0-overlay.dtbo \
+	rk3588-armsom-sige7-camera-ov13850-csi1-overlay.dtbo \
+	rk3588-armsom-sige7-display-1200x1900-10.1hd-overlay.dtbo \
+	rk3588-armsom-uart2-m0.dtbo \
+	rk3588-armsom-uart2-m2.dtbo \
+	rk3588-armsom-uart3-m1.dtbo \
+	rk3588-armsom-uart4-m2.dtbo \
+	rk3588-armsom-uart7-m1.dtbo \
+	rk3588-armsom-uart7-m2.dtbo 
 endif
 
 dtbotxt-$(CONFIG_ARCH_ROCKCHIP) += \
