@@ -174,6 +174,8 @@ ifneq ($(CONFIG_PCI_MSI),)
 endif
 DHDOFILES += dhd_pcie.o dhd_pcie_linux.o pcie_core.o dhd_flowring.o       \
 	dhd_msgbuf.o dhd_linux_lb.o
+
+MODULE_NAME := bcmdhd_pcie
 endif
 
 #BCMDHD_USB
