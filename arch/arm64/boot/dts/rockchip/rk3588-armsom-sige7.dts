@@ -179,6 +179,16 @@
 		startup-delay-us = <5000>;
 		vin-supply = <&vcc5v0_sys>;
 	};
+	
+	vcc3v3_pcie20_wifi: vcc3v3-pcie20-wifi {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc3v3_pcie20_wifi";
+		pinctrl-names = "default";
+		pinctrl-0 = <&wifi_poweren_gpio>;
+		enable-active-high;
+		gpios = <&gpio0 RK_PC4 GPIO_ACTIVE_HIGH>;
+		startup-delay-us = <5000>;
+	};
 
 	vcc5v0_host: vcc5v0-host {
 		compatible = "regulator-fixed";
@@ -208,8 +218,6 @@
 	wireless_wlan: wireless-wlan {
 		compatible = "wlan-platdata";
 		wifi_chip_type = "ap6275p";
-		pinctrl-names = "default";
-		pinctrl-0 = <&wifi_host_wake_irq>,<&wifi_poweren_gpio>;
 		WIFI,host_wake_irq = <&gpio0 RK_PB2 GPIO_ACTIVE_HIGH>;
 		WIFI,poweren_gpio = <&gpio0 RK_PC4 GPIO_ACTIVE_HIGH>;
 	};
@@ -590,6 +598,7 @@
 
 &pcie2x1l1 {
 	reset-gpios = <&gpio3 RK_PD4 GPIO_ACTIVE_HIGH>;
+	vpcie3v3-supply = <&vcc3v3_pcie20_wifi>;
 	status = "okay";
 };
 
@@ -647,12 +656,6 @@
 	pcie30x4 {
 		pcie30x4_clkreqn_m1: pcie30x4-clkreqn-m1 {
 			rockchip,pins = <4 RK_PB4 RK_FUNC_GPIO &pcfg_pull_down>;
-		};
-	};
-
-	sdio-pwrseq {
-		wifi_enable_h: wifi-enable-h {
-			rockchip,pins = <0 RK_PC4 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 	};
 
