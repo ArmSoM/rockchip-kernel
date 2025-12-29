@@ -78,6 +78,7 @@ dtbo-$(CONFIG_CPU_RK3588) += \
 	rk3588-armsom-pwm15-m2.dtbo \
 	rk3588-armsom-spi0-m2-cs0-cs1-spidev.dtbo \
 	rk3588-armsom-spi1-m1-cs0-spidev.dtbo \
+	rk3588-armsom-spi1-m1-cs1-spidev.dtbo \
 	rk3588-armsom-sige7-camera-imx415-4k-overlay.dtbo \
 	rk3588-armsom-sige7-camera-ov13850-csi0-overlay.dtbo \
 	rk3588-armsom-sige7-camera-ov13850-csi1-overlay.dtbo \
