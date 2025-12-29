@@ -6,7 +6,7 @@
 	fragment@0 {
 		target = <&fiq_debugger>;
 
-		__overlay__ {s
+		__overlay__ {
 			status = "okay";
 			rockchip,serial-id = <0xffffffff>;
 		};

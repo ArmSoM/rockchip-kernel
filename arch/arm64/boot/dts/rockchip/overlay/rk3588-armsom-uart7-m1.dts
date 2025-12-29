@@ -10,5 +10,5 @@
 			status = "okay";
 			pinctrl-0 = <&uart7m1_xfer>;
 		};
-	};s
+	};
 };
