@@ -1,0 +1,684 @@
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/clock/rk3588-cru.h>
+#include <dt-bindings/power/rk3588-power.h>
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/pinctrl/rockchip.h>
+
+/ {
+	fragment@0 {
+		target = <&i2c2>;
+		__overlay__ {
+			status = "okay";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			camera_imx219: camera-imx219@10 {
+				status = "okay";
+				compatible = "sony,imx219";
+				reg = <0x10>;
+				clocks = <&cru CLK_MIPI_CAMARAOUT_M0>;
+				clock-names = "xvclk";
+				pinctrl-names = "rockchip,camera_default";
+				pinctrl-0 = <&mipim1_camera0_clk>;//gpio3_a5
+				// VANA-supply = <&camera_pwdn_gpio>;   /* 2.8v */
+				// VDIG-supply = <&camera_pwdn_gpio>;   /* 1.8v */
+				// VDDL-supply = <&camera_pwdn_gpio>;   /* 1.2v */
+
+				power-domains = <&power RK3588_PD_VI>;
+				pwdn-gpios = <&gpio3 RK_PA2 GPIO_ACTIVE_HIGH>;
+
+				rockchip,camera-module-index = <0>;
+				rockchip,camera-module-facing = "back";
+				rockchip,camera-module-name = "RADXA-CAMERA-8M";
+				rockchip,camera-module-lens-name = "default";
+
+				port {
+					imx219_out0: endpoint {
+						remote-endpoint = <&mipidphy0_in_ucam1>;
+						data-lanes = <1 2>;
+						clock-noncontinuous;
+						link-frequencies = /bits/ 64 <456000000>;
+					};
+				};
+			};
+		};
+	};
+	
+	fragment@1 {
+		target = <&i2c4>;
+		__overlay__ {
+			status = "okay";
+			pinctrl-names = "default";
+			pinctrl-0 = <&i2c4m2_xfer>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			camera1_imx219: camera1-imx219@10 {
+				status = "okay";
+				compatible = "sony,imx219";
+				reg = <0x10>;
+
+				clocks = <&cru CLK_MIPI_CAMARAOUT_M1>;
+				clock-names = "xvclk";
+				pinctrl-names = "rockchip,camera_default";
+				pinctrl-0 = <&mipim1_camera1_clk>;//gpio3_a6
+				// VANA-supply = <&camera2_pwdn_gpio>;   /* 2.8v */
+				// VDIG-supply = <&camera2_pwdn_gpio>;   /* 1.8v */
+				// VDDL-supply = <&camera2_pwdn_gpio>;   /* 1.2v */
+				power-domains = <&power RK3588_PD_VI>;
+				pwdn-gpios = <&gpio4 RK_PA6 GPIO_ACTIVE_HIGH>;
+
+				rockchip,camera-module-index = <1>;
+				rockchip,camera-module-facing = "back";
+				rockchip,camera-module-name = "RADXA-CAMERA-8M";
+				rockchip,camera-module-lens-name = "default";
+
+				port {
+					imx219_out1: endpoint {
+						remote-endpoint = <&mipidphy0_in_ucam2>;
+						data-lanes = <1 2>;
+						clock-noncontinuous;
+						link-frequencies = /bits/ 64 <456000000>;
+					};
+				};
+			};
+		};
+	};
+	
+	fragment@2 {
+		target = <&i2c3>;
+		__overlay__ {
+			status = "okay";
+			ov13850_2: ov13850_2@10 {
+                #address-cells = <1>;
+                #size-cells = <0>;
+				status = "okay";
+				compatible = "ovti,ov13850";
+				reg = <0x10>;
+				clocks = <&cru CLK_MIPI_CAMARAOUT_M3>;
+				clock-names = "xvclk";
+				pinctrl-names = "rockchip,camera_default";
+				pinctrl-0 = <&mipim1_camera3_clk>;
+				pwdn-gpios = <&gpio4 RK_PA3 GPIO_ACTIVE_HIGH>;
+				reset-gpios = <&gpio1 RK_PD6 GPIO_ACTIVE_HIGH>;
+				rockchip,camera-module-index = <3>;
+				rockchip,camera-module-facing = "back";
+				rockchip,camera-module-name = "ZC-OV13850R2A-V1";
+				rockchip,camera-module-lens-name = "Largan-50064B31";
+				port {
+					ov13850_out1: endpoint {
+						remote-endpoint = <&mipi_in_dphy1>;
+						data-lanes = <1 2 3 4>;
+					};
+				};
+			};
+		};
+	};
+	
+	fragment@3 {
+		target = <&i2c6>;
+		__overlay__ {
+            #address-cells = <1>;
+            #size-cells = <0>;
+			status = "okay";
+			pinctrl-names = "default";
+			pinctrl-0 = <&i2c6m1_xfer>;
+			ov13850_1: ov13850_1@10 {
+				status = "okay";
+				compatible = "ovti,ov13850";
+				reg = <0x10>;
+				clocks = <&cru CLK_MIPI_CAMARAOUT_M4>;
+				clock-names = "xvclk";
+				pinctrl-names = "rockchip,camera_default";
+				pinctrl-0 = <&mipim1_camera4_clk>;//gpio3_a6
+				pwdn-gpios = <&gpio1 RK_PD7 GPIO_ACTIVE_HIGH>;
+				reset-gpios = <&gpio4 RK_PA0 GPIO_ACTIVE_HIGH>;
+				rockchip,camera-module-index = <2>;
+				rockchip,camera-module-facing = "back";
+				rockchip,camera-module-name = "ZC-OV13850R2A-V1";
+				rockchip,camera-module-lens-name = "Largan-50064B31";
+				port {
+					ov13850_out: endpoint {
+						remote-endpoint = <&mipi_in_dcphy0>;
+						data-lanes = <1 2 3 4>;
+					};
+				};
+			};
+		};
+	};
+	
+	fragment@4 {
+		target = <&csi2_dphy0_hw>;
+
+		__overlay__ {
+			status = "okay";
+		};
+	};
+	
+	fragment@5 {
+		target = <&csi2_dphy1_hw>;
+
+		__overlay__ {
+			status = "okay";
+		};
+	};
+	
+	fragment@6 {
+		target = <&csi2_dphy1>;
+
+		__overlay__ {
+			status = "okay";
+			ports {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				port@0 {
+					reg = <0>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+
+					mipidphy0_in_ucam1: endpoint@1 {
+						reg = <1>;
+						remote-endpoint = <&imx219_out0>;
+						data-lanes = <1 2>;
+					};
+				};
+
+				port@1 {
+					reg = <1>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+
+					csidphy1_out: endpoint@0 {
+						reg = <0>;
+						remote-endpoint = <&mipi2_csi2_input>;
+					};
+				};
+			};
+		};
+	};
+	
+	fragment@7 {
+		target = <&csi2_dphy2>;
+
+		__overlay__ {
+			status = "okay";
+			ports {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				port@0 {
+					reg = <0>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+
+					mipidphy0_in_ucam2: endpoint@1 {
+						reg = <1>;
+						remote-endpoint = <&imx219_out1>;
+						data-lanes = <1 2>;
+					};
+				};
+
+				port@1 {
+					reg = <1>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+
+					csidphy2_out: endpoint@0 {
+						reg = <0>;
+						remote-endpoint = <&mipi3_csi2_input>;
+					};
+				};
+			};
+		};
+	};
+	
+	fragment@8 {
+		target = <&csi2_dphy3>;
+
+		__overlay__ {
+			status = "okay";
+			ports {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				port@0 {
+					reg = <0>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+
+					mipi_in_dphy1: endpoint@1 {
+						reg = <1>;
+						remote-endpoint = <&ov13850_out1>;
+						data-lanes = <1 2 3 4>;
+					};
+
+				};
+
+				port@1 {
+					reg = <1>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+
+					csidphy3_out: endpoint@0 {
+						reg = <0>;
+						remote-endpoint = <&mipi4_csi2_input>;
+					};
+				};
+			};
+		};
+	};
+	
+	fragment@9 {
+		target = <&mipi_dcphy0>;
+
+		__overlay__ {
+			status = "okay";
+			
+		};
+	};
+	
+	fragment@10 {
+		target = <&csi2_dcphy0>;
+
+		__overlay__ {
+			status = "okay";
+			ports {
+				#address-cells = <1>;
+				#size-cells = <0>;
+				port@0 {
+					reg = <0>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+
+					mipi_in_dcphy0: endpoint@1 {
+						reg = <1>;
+						remote-endpoint = <&ov13850_out>;
+						data-lanes = <1 2 3 4>;
+					};
+				};
+				port@1 {
+					reg = <1>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+
+					csidcphy0_out: endpoint@0 {
+						reg = <0>;
+						remote-endpoint = <&mipi1_csi2_input>;
+					};
+				};
+			};
+		};
+	};
+	
+	fragment@11 {
+		target = <&mipi0_csi2>;
+
+		__overlay__ {
+			status = "okay";
+			ports {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				port@0 {
+					reg = <0>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+
+					mipi1_csi2_input: endpoint@1 {
+						reg = <1>;
+						remote-endpoint = <&csidcphy0_out>;
+					};
+				};
+
+				port@1 {
+					reg = <1>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+
+					mipi0_csi2_output: endpoint@0 {
+						reg = <0>;
+						remote-endpoint = <&cif_mipi_in0>;
+					};
+				};
+			};
+		};
+	};
+	
+	fragment@12 {
+		target = <&mipi2_csi2>;
+
+		__overlay__ {
+			status = "okay";
+			ports {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				port@0 {
+					reg = <0>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+
+					mipi2_csi2_input: endpoint@1 {
+						reg = <1>;
+						remote-endpoint = <&csidphy1_out>;
+					};
+				};
+
+				port@1 {
+					reg = <1>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+
+					mipi2_csi2_output: endpoint@0 {
+						reg = <0>;
+						remote-endpoint = <&cif_mipi_in2>;
+					};
+				};
+			};
+		};
+	};
+	
+	fragment@13 {
+		target = <&mipi3_csi2>;
+
+		__overlay__ {
+			status = "okay";
+			ports {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				port@0 {
+					reg = <0>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+
+					mipi3_csi2_input: endpoint@1 {
+						reg = <1>;
+						remote-endpoint = <&csidphy2_out>;
+					};
+				};
+
+				port@1 {
+					reg = <1>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+
+					mipi3_csi2_output: endpoint@0 {
+						reg = <0>;
+						remote-endpoint = <&cif_mipi_in3>;
+					};
+				};
+			};
+		};
+	};
+	
+	fragment@14 {
+		target = <&mipi4_csi2>;
+
+		__overlay__ {
+			status = "okay";
+			ports {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				port@0 {
+					reg = <0>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+
+					mipi4_csi2_input: endpoint@1 {
+						reg = <1>;
+						remote-endpoint = <&csidphy3_out>;
+					};
+				};
+
+				port@1 {
+					reg = <1>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+
+					mipi4_csi2_output: endpoint@0 {
+						reg = <0>;
+						remote-endpoint = <&cif_mipi_in4>;
+					};
+				};
+			};
+		};
+	};
+	
+	fragment@15 {
+		target = <&rkcif>;
+
+		__overlay__ {
+			status = "okay";
+		};
+	};
+	
+	fragment@16 {
+		target = <&rkcif_mipi_lvds>;
+
+		__overlay__ {
+			status = "okay";
+			port {
+				cif_mipi_in0: endpoint {
+					remote-endpoint = <&mipi0_csi2_output>;
+				};
+			};
+		};
+	};
+	
+	fragment@17 {
+		target = <&rkcif_mipi_lvds_sditf>;
+
+		__overlay__ {
+			status = "okay";
+			port {
+				mipi_lvds_sditf: endpoint {
+					remote-endpoint = <&isp0_vir0>;
+				};
+			};
+		};
+	};
+	
+	fragment@18 {
+		target = <&rkcif_mipi_lvds2>;
+
+		__overlay__ {
+			status = "okay";
+			port {
+				cif_mipi_in2: endpoint {
+					remote-endpoint = <&mipi2_csi2_output>;
+				};
+			};
+		};
+	};
+	
+	fragment@19 {
+		target = <&rkcif_mipi_lvds2_sditf>;
+
+		__overlay__ {
+			status = "okay";
+			port {
+				mipi2_lvds_sditf: endpoint {
+					remote-endpoint = <&isp0_vir2>;
+				};
+			};
+		};
+	};
+	
+	fragment@20 {
+		target = <&rkcif_mipi_lvds3>;
+
+		__overlay__ {
+			status = "okay";
+			port {
+				cif_mipi_in3: endpoint {
+					remote-endpoint = <&mipi3_csi2_output>;
+				};
+			};
+		};
+	};
+	
+	fragment@21{
+		target = <&rkcif_mipi_lvds3_sditf>;
+
+		__overlay__ {
+			status = "okay";
+			port {
+				mipi3_lvds_sditf: endpoint {
+					remote-endpoint = <&isp1_vir0>;
+				};
+			};
+		};
+	};
+	
+	fragment@22{
+		target = <&rkcif_mipi_lvds4>;
+
+		__overlay__ {
+			status = "okay";
+			port {
+				cif_mipi_in4: endpoint {
+					remote-endpoint = <&mipi4_csi2_output>;
+				};
+			};
+		};
+	};
+	
+	fragment@23{
+		target = <&rkcif_mipi_lvds4_sditf>;
+
+		__overlay__ {
+			status = "okay";
+			port {
+				mipi4_lvds_sditf: endpoint {
+					remote-endpoint = <&isp1_vir1>;
+				};
+			};
+		};
+	};
+	
+	fragment@24{
+		target = <&rkcif_mmu>;
+
+		__overlay__ {
+			status = "okay";
+		};
+	};
+	
+	fragment@25{
+		target = <&rkisp0>;
+
+		__overlay__ {
+			status = "okay";
+		};
+	};
+	
+	fragment@26{
+		target = <&isp0_mmu>;
+
+		__overlay__ {
+			status = "okay";
+		};
+	};
+	
+	fragment@27{
+		target = <&rkisp0_vir0>;
+
+		__overlay__ {
+			status = "okay";
+			port {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				isp0_vir0: endpoint@0 {
+					reg = <0>;
+					remote-endpoint = <&mipi_lvds_sditf>;
+				};
+			};
+		};
+	};
+	
+	fragment@28{
+		target = <&rkisp0_vir2>;
+
+		__overlay__ {
+			status = "okay";
+			port {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				isp0_vir2: endpoint@0 {
+					reg = <0>;
+					remote-endpoint = <&mipi2_lvds_sditf>;
+				};
+			};
+		};
+	};
+	
+	fragment@29{
+		target = <&rkisp1>;
+
+		__overlay__ {
+			status = "okay";
+		};
+	};
+	
+	fragment@30{
+		target = <&isp1_mmu>;
+
+		__overlay__ {
+			status = "okay";
+		};
+	};
+	
+	fragment@31{
+		target = <&rkisp1_vir0>;
+
+		__overlay__ {
+			status = "okay";
+			port {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				isp1_vir0: endpoint@0 {
+					reg = <0>;
+					remote-endpoint = <&mipi3_lvds_sditf>;
+				};
+			};
+		};
+	};
+	
+	fragment@32{
+		target = <&rkisp1_vir1>;
+
+		__overlay__ {
+			status = "okay";
+			port {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				isp1_vir1: endpoint@0 {
+					reg = <0>;
+					remote-endpoint = <&mipi4_lvds_sditf>;
+				};
+			};
+		};
+	};
+	
+	fragment@33 {
+		target = <&pinctrl>;
+		__overlay__ {
+			camera {
+				cam_pwdn_gpio: cam-pwdn-gpio {
+					rockchip,pins = <3 RK_PA2 RK_FUNC_GPIO &pcfg_pull_up>;
+				};
+				cam2_pwdn_gpio: cam2-pwdn-gpio {
+					rockchip,pins = <4 RK_PA6 RK_FUNC_GPIO &pcfg_pull_up>;
+				};	
+			};
+		};
+	};
+};

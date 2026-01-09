@@ -55,6 +55,8 @@ dtbo-$(CONFIG_CPU_RK3576) += \
 	rk3576-armsom-sige5-display-1200x1900-10.1hd-overlay.dtbo 
 
 dtbo-$(CONFIG_CPU_RK3588) += \
+	rk3588-armsom-aim7-display-800x1280-8hd-overlay.dtbo \
+	rk3588-armsom-aim7-camera-overlay.dtbo \
 	rk3588-armsom-can1-m0.dtbo \
 	rk3588-armsom-can1-m1.dtbo \
 	rk3588-armsom-i2c0-m1.dtbo \
@@ -88,7 +90,9 @@ dtbo-$(CONFIG_CPU_RK3588) += \
 	rk3588-armsom-uart3-m1.dtbo \
 	rk3588-armsom-uart4-m2.dtbo \
 	rk3588-armsom-uart7-m1.dtbo \
-	rk3588-armsom-uart7-m2.dtbo 
+	rk3588-armsom-uart7-m2.dtbo \
+	rk3588-armsom-w3-display-1200x1900-10.1hd-overlay.dtbo \
+	rk3588-armsom-w3-camera-ov13850-csi0-overlay.dtbo
 endif
 
 dtbotxt-$(CONFIG_ARCH_ROCKCHIP) += \

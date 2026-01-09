@@ -37,5 +37,10 @@ enable_uboot_overlays=1
 #dtoverlay=/dtb/overlay/rk3588-armsom-uart7-m1.dtbo
 #dtoverlay=/dtb/overlay/rk3588-armsom-uart7-m2.dtbo
 
+# Display
+#dtoverlay=/dtb/overlay/rk3588-armsom-w3-display-1200x1900-10.1hd-overlay.dtbo
+
+# CAM0
+#dtoverlay=/dtb/overlay/rk3588-armsom-w3-camera-ov13850-csi0-overlay.dtbo
 
 #overlay_end
