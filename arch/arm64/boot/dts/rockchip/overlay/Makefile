@@ -48,6 +48,7 @@ dtbo-$(CONFIG_CPU_RK3576) += \
 	rk3576-armsom-cm5-io-camera-imx219-cs0-overlay.dtbo \
 	rk3576-armsom-cm5-io-camera-ov13850-cs1-overlay.dtbo \
 	rk3576-armsom-cm5-io-display-1200x1900-10.1hd-overlay.dtbo \
+	rk3576-armsom-cm5-cm4-nano-b-io-camera-imx219-cs0-overlay.dtbo \
 	rk3576-armsom-hdmi-disabled-overlay.dtbo \
 	rk3576-armsom-dp-disabled-overlay.dtbo \
 	rk3576-armsom-sige5-camera-ov13850-cs0-overlay.dtbo \
