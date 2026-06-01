@@ -32,8 +32,15 @@ menuconfig BCMDHD
 	bool "Broadcom Wireless Device Driver Support"
 	default y
 
+menuconfig AICDHD
+	bool "AIC8800(SDIO) Wireless Device Driver Support"
+	default n
+
 if BCMDHD
 source "drivers/net/wireless/rockchip_wlan/rkwifi/Kconfig"
+endif
+if AICDHD
+source "drivers/net/wireless/rockchip_wlan/aic8800/Kconfig"
 endif
 
 endif # WL_ROCKCHIP
