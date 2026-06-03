@@ -28,6 +28,11 @@ board_info() {
 				BOARD_DTB='rk3588-armsom-sige7.dtb'
 				BOARD_uEnv='uEnvarmsom-sige7.txt'
 				;;
+			armsom-sige7s)
+				BOARD_NAME='armsom-sige7s'
+				BOARD_DTB='rk3588s-armsom-sige7s.dtb'
+				BOARD_uEnv='uEnvarmsom-sige7s.txt'
+				;;
 			armsom-w3)
 				BOARD_NAME='armsom-w3'
 				BOARD_DTB='rk3588-armsom-w3.dtb'
