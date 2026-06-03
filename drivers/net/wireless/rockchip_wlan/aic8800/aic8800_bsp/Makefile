@@ -1,6 +1,6 @@
 CONFIG_SDIO_SUPPORT := y
 CONFIG_SDIO_PWRCTRL := n
-CONFIG_AIC_FW_PATH = "/vendor/etc/firmware"
+#CONFIG_AIC_FW_PATH = "/vendor/etc/firmware"
 #CONFIG_AIC_FW_PATH = "/lib/firmware/aic8800D80"
 export CONFIG_AIC_FW_PATH
 ccflags-y += -DCONFIG_AIC_FW_PATH=\"$(CONFIG_AIC_FW_PATH)\"

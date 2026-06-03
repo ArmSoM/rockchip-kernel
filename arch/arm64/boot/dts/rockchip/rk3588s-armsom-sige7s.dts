@@ -300,11 +300,11 @@
 		clock-names = "ext_clock";
 		uart_rts_gpios = <&gpio3 RK_PD2 GPIO_ACTIVE_LOW>;
 		pinctrl-names = "default", "rts_gpio";
-		pinctrl-0 = <&uart9m2_rtsn>, <&bt_reset_gpio>, <&bt_wake_gpio>, <&bt_wake_host_irq>;
+		pinctrl-0 = <&uart9m2_rtsn>;
 		pinctrl-1 = <&uart9_gpios>;
 		BT,reset_gpio    = <&gpio0 RK_PD3 GPIO_ACTIVE_HIGH>;
-		BT,wake_gpio     = <&gpio0 RK_PC6 GPIO_ACTIVE_HIGH>;
-		BT,wake_host_irq = <&gpio0 RK_PC5 GPIO_ACTIVE_HIGH>;
+		// BT,wake_gpio     = <&gpio0 RK_PC6 GPIO_ACTIVE_HIGH>;
+		// BT,wake_host_irq = <&gpio0 RK_PC5 GPIO_ACTIVE_HIGH>;
 		status = "okay";
 	};
 
@@ -942,11 +942,11 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c7m0_xfer>;
 	
-	es8316: es8316@10 {
+	es8316: es8316@11 {
 		status = "okay";
 		#sound-dai-cells = <0>;
 		compatible = "everest,es8316";
-		reg = <0x10>;
+		reg = <0x11>;
 		clocks = <&mclkout_i2s0>;
 		clock-names = "mclk";
 		assigned-clocks = <&mclkout_i2s0>;
@@ -1313,17 +1313,17 @@
 			rockchip,pins = <3 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 
-		bt_reset_gpio: bt-reset-gpio {
-			rockchip,pins = <0 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
-		};
+		// bt_reset_gpio: bt-reset-gpio {
+		// 	rockchip,pins = <0 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
+		// };
 
-		bt_wake_gpio: bt-wake-gpio {
-			rockchip,pins = <0 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
-		};
+		// bt_wake_gpio: bt-wake-gpio {
+		// 	rockchip,pins = <0 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
+		// };
 
-		bt_wake_host_irq: bt-wake-host-irq {
-			rockchip,pins = <0 RK_PC5 RK_FUNC_GPIO &pcfg_pull_down>;
-		};
+		// bt_wake_host_irq: bt-wake-host-irq {
+		// 	rockchip,pins = <0 RK_PC5 RK_FUNC_GPIO &pcfg_pull_down>;
+		// };
 	};
 
 	wireless-wlan {
