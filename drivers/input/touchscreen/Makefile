@@ -5,8 +5,8 @@
 
 # Each configuration option enables a list of files.
 
-wm97xx-ts-y := wm97xx-core.o
-goodix_ts-y := goodix.o goodix_fwupload.o
+# wm97xx-ts-y := wm97xx-core.o
+# goodix_ts-y := goodix.o goodix_fwupload.o
 
 obj-$(CONFIG_TOUCHSCREEN_88PM860X)	+= 88pm860x-ts.o
 obj-$(CONFIG_TOUCHSCREEN_AD7877)	+= ad7877.o
@@ -133,3 +133,4 @@ obj-$(CONFIG_TOUCHSCREEN_RASPBERRYPI_FW)	+= raspberrypi-ts.o
 obj-$(CONFIG_TOUCHSCREEN_IQS5XX)	+= iqs5xx.o
 obj-$(CONFIG_TOUCHSCREEN_ZINITIX)	+= zinitix.o
 obj-$(CONFIG_TOUCHSCREEN_HIMAX_CHIPSET)	+= hxchipset/
+obj-y += raspits_ft5426.o
