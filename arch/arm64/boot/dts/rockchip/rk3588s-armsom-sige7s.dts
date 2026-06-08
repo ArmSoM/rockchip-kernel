@@ -343,77 +343,15 @@
 };
 
 &mipi_dcphy0 {
-	status = "disabled";
+	status = "okay";
 };
 
 &dsi0 {
-	status = "disabled";
-	dsi0_panel: panel@0 {
+	status = "okay";
+	dsi_panel: dsi-panel@0 {
+		compatible = "raspits,tc358762";
+		reg = <0x0>;
 		status = "okay";
-		compatible = "simple-panel-dsi";
-		reg = <0>;
-		backlight = <&backlight>;
-		reset-delay-ms = <60>;
-		enable-delay-ms = <60>;
-		prepare-delay-ms = <60>;
-		unprepare-delay-ms = <60>;
-		disable-delay-ms = <60>;
-		dsi,flags = <(MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST |
-			MIPI_DSI_MODE_LPM | MIPI_DSI_MODE_NO_EOT_PACKET)>;
-		dsi,format = <MIPI_DSI_FMT_RGB888>;
-		dsi,lanes  = <2>;
-		panel-init-sequence = [
-			23 00 02 7A C1
-			23 00 02 20 20
-			23 00 02 21 E0
-			23 00 02 22 13
-            23 00 02 23 08
-            23 00 02 24 04
-            23 00 02 25 08
-            23 00 02 26 00
-            23 00 02 27 08
-            23 00 02 28 04
-            23 00 02 29 08
-            23 00 02 34 80
-            23 00 02 86 29
-            23 00 02 B5 A0
-            23 00 02 5C FF
-            23 00 02 2A 01
-            23 00 02 56 92
-            23 00 02 6B 71
-            23 00 02 69 15
-            23 00 02 10 40
-            23 00 02 11 88
-            23 00 02 B6 20
-            23 00 02 51 20
-            23 00 02 09 10
-			05 78 01 11
-			05 1E 01 29
-		];
-
-		panel-exit-sequence = [
-			05 00 01 28
-			05 00 01 10
-		];
-
-		disp_timings0: display-timings {
-			native-mode = <&dsi0_timing0>;
-			dsi0_timing0: timing0 {
-				clock-frequency = <25000000>;
-				hactive = <800>;
-				vactive = <480>;
-				hfront-porch = <8>;
-				hsync-len = <4>;
-				hback-porch = <8>;
-				vfront-porch = <8>;
-				vsync-len = <4>;
-				vback-porch = <8>;
-				hsync-active = <0>;
-				vsync-active = <0>;
-				de-active = <0>;
-				pixelclk-active = <0>;
-			};
-		};
 
 		ports {
 			#address-cells = <1>;
@@ -443,7 +381,7 @@
 };
 
 &dsi0_in_vp3 {
-	status = "disabled";
+	status = "okay";
 };
 
 &route_dsi0 {
@@ -771,7 +709,7 @@
 
 &backlight {
 	pwms = <&pwm13 0 25000 0>;
-	status = "okay";
+	status = "disabled";
 };
 
 &dp0 {
@@ -891,23 +829,18 @@
 
 /*mipi dsi*/
 &i2c4 {
-	status = "disabled";
+	status = "okay";
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c4m3_xfer>;
 
-	tinker_mcu: tinker_mcu@45 {
-		compatible = "tinker_mcu";
-		reg = <0x45>;
-	};
-
-	tinker_mcu_ili9881c: tinker_mcu_ili9881c@36 {
-		compatible = "tinker_mcu_ili9881c";
-		reg = <0x36>;
-	};
-
-	tinker_ft5406: tinker_ft5406@38 {
-		compatible = "tinker_ft5406";
+	raspits_ft5426: raspits_ft5426@38 {
+		compatible = "raspits_ft5426";
 		reg = <0x38>;
+	};
+
+	rockpi_mcu: rockpi-mcu@45 {
+		compatible = "rockpi_mcu";
+		reg = <0x45>;
 	};
 };
 
@@ -958,54 +891,54 @@
 
 /*mipi csi*/
 &i2c8 {
-	status = "disabled";
+	status = "okay";
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c8m2_xfer>;
 
-	ov5647: ov5647@36 {
-                status = "okay";
-                compatible = "ovti,ov5647";
-                reg = <0x36>;
-		clocks = <&cru CLK_MIPI_CAMARAOUT_M0>;
-                clock-names = "xvclk";
-		power-domains = <&power RK3588_PD_VI>;
-                pinctrl-names = "default";
-                pinctrl-0 = <&cam_clkout0>;
-		avdd-supply = <&vcc_mipidphy0>;
-		rockchip,camera-module-index = <1>;
-		rockchip,camera-module-facing = "front";
-		rockchip,camera-module-name = "THDS11073LarganCAM0";
-		rockchip,camera-module-lens-name = "40122a1";
+	// ov5647: ov5647@36 {
+    //             status = "okay";
+    //             compatible = "ovti,ov5647";
+    //             reg = <0x36>;
+	// 	clocks = <&cru CLK_MIPI_CAMARAOUT_M0>;
+    //             clock-names = "xvclk";
+	// 	power-domains = <&power RK3588_PD_VI>;
+    //             pinctrl-names = "default";
+    //             pinctrl-0 = <&cam_clkout0>;
+	// 	avdd-supply = <&vcc_mipidphy0>;
+	// 	rockchip,camera-module-index = <1>;
+	// 	rockchip,camera-module-facing = "front";
+	// 	rockchip,camera-module-name = "THDS11073LarganCAM0";
+	// 	rockchip,camera-module-lens-name = "40122a1";
 
-                port {
-                        ov5647_out: endpoint {
-                                remote-endpoint = <&mipidphy0_in_ucam0>;
-                                data-lanes = <1 2>;
-                        };
-                };
-        };
+    //             port {
+    //                     ov5647_out: endpoint {
+    //                             remote-endpoint = <&mipidphy0_in_ucam0>;
+    //                             data-lanes = <1 2>;
+    //                     };
+    //             };
+    //     };
 
-	imx477: imx477@1a {
-                compatible = "sony,imx477";
-                reg = <0x1a>;
-                clocks = <&cru CLK_MIPI_CAMARAOUT_M0>;
-                clock-names = "xvclk";
-                power-domains = <&power RK3588_PD_VI>;
-                pinctrl-names = "default";
-                pinctrl-0 = <&cam_clkout0>;
-                avdd-supply = <&vcc_mipidphy0>;
-                rockchip,camera-module-index = <1>;
-                rockchip,camera-module-facing = "front";
-                rockchip,camera-module-name = "COOLPIIMXCAM0";
-                rockchip,camera-module-lens-name = "IMX477";
+	// imx477: imx477@1a {
+    //             compatible = "sony,imx477";
+    //             reg = <0x1a>;
+    //             clocks = <&cru CLK_MIPI_CAMARAOUT_M0>;
+    //             clock-names = "xvclk";
+    //             power-domains = <&power RK3588_PD_VI>;
+    //             pinctrl-names = "default";
+    //             pinctrl-0 = <&cam_clkout0>;
+    //             avdd-supply = <&vcc_mipidphy0>;
+    //             rockchip,camera-module-index = <1>;
+    //             rockchip,camera-module-facing = "front";
+    //             rockchip,camera-module-name = "COOLPIIMXCAM0";
+    //             rockchip,camera-module-lens-name = "IMX477";
 
-                port {
-                        imx477_out: endpoint {
-                                remote-endpoint = <&mipidphy0_in_ucam1>;
-                                data-lanes = <1 2>;
-                        };
-                };
-        };
+    //             port {
+    //                     imx477_out: endpoint {
+    //                             remote-endpoint = <&mipidphy0_in_ucam1>;
+    //                             data-lanes = <1 2>;
+    //                     };
+    //             };
+    //     };
 		
 	imx219: imx219@10 {
 		compatible = "sony,imx219";
@@ -1034,7 +967,7 @@
 };
 
 &csi2_dphy0 {
-	status = "disabled";
+	status = "okay";
 
 	ports {
 		#address-cells = <1>;
@@ -1044,17 +977,17 @@
 			#address-cells = <1>;
 			#size-cells = <0>;
 
-			mipidphy0_in_ucam0: endpoint@1 {
-				reg = <1>;
-				remote-endpoint = <&ov5647_out>;
-				data-lanes = <1 2>;
-			};
+			// mipidphy0_in_ucam0: endpoint@1 {
+			// 	reg = <1>;
+			// 	remote-endpoint = <&ov5647_out>;
+			// 	data-lanes = <1 2>;
+			// };
 
-			mipidphy0_in_ucam1: endpoint@2 {
-				reg = <2>;
-				remote-endpoint = <&imx477_out>;
-				data-lanes = <1 2>;
-			};
+			// mipidphy0_in_ucam1: endpoint@2 {
+			// 	reg = <2>;
+			// 	remote-endpoint = <&imx477_out>;
+			// 	data-lanes = <1 2>;
+			// };
 			
 			mipidphy0_in_ucam2: endpoint@3 {
 				reg = <3>;
@@ -1076,11 +1009,11 @@
 };
 
 &csi2_dphy0_hw {
-	status = "disabled";
+	status = "okay";
 };
 
 &mipi2_csi2 {
-	status = "disabled";
+	status = "okay";
 
 	ports {
 		#address-cells = <1>;
@@ -1111,11 +1044,11 @@
 };
 
 &rkcif {
-	status = "disabled";
+	status = "okay";
 };
 
 &rkcif_mipi_lvds2 {
-	status = "disabled";
+	status = "okay";
 
 	port {
 		cif_mipi2_in0: endpoint {
@@ -1125,7 +1058,7 @@
 };
 
 &rkcif_mipi_lvds2_sditf {
-	status = "disabled";
+	status = "okay";
 
 	port {
 		mipi_lvds2_sditf: endpoint {
@@ -1136,19 +1069,19 @@
 
 
 &rkcif_mmu {
-        status = "disabled";
+        status = "okay";
 };
 
 &rkisp0 {
-	status = "disabled";
+	status = "okay";
 };
 
 &isp0_mmu {
-	status = "disabled";
+	status = "okay";
 };
 
 &rkisp0_vir0 {
-	status = "disabled";
+	status = "okay";
 
 	port {
 		#address-cells = <1>;
@@ -1189,7 +1122,7 @@
 };
 
 &pwm13 {
-	status = "okay";
+	status = "disabled";
 	pinctrl-names = "active";
 	pinctrl-0 = <&pwm13m2_pins>;
 };
