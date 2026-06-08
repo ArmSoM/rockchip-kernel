@@ -268,23 +268,6 @@
 		vin-supply = <&vcc5v0_sys>;
 	};
 
-	vcc_mipidphy0: vcc-mipi-dphy0 {
-		compatible = "regulator-fixed";
-		regulator-name = "vcc_mipidphy0";
-		regulator-min-microvolt = <1200000>;
-		regulator-max-microvolt = <1200000>;
-		gpios = <&gpio1 RK_PA6 GPIO_ACTIVE_HIGH>;
-		regulator-always-on;
-		regulator-boot-on;
-		enable-active-high;
-		vin-supply = <&vcc_3v3_s3>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&cam_en>;
-		regulator-state-mem {
-			regulator-off-in-suspend;
-		};
-	};
-
 	vcc_3v3_sd_s0: vcc-3v3-sd-s0 {
 		compatible = "regulator-fixed";
 		regulator-name = "vcc_3v3_sd_s0";
@@ -340,53 +323,6 @@
 &cpu_b2 {
 	cpu-supply = <&vdd_cpu_big1_s0>;
 	mem-supply = <&vdd_cpu_big1_mem_s0>;
-};
-
-&mipi_dcphy0 {
-	status = "okay";
-};
-
-&dsi0 {
-	status = "okay";
-	dsi_panel: dsi-panel@0 {
-		compatible = "raspits,tc358762";
-		reg = <0x0>;
-		status = "okay";
-
-		ports {
-			#address-cells = <1>;
-			#size-cells = <0>;
-
-			port@0 {
-				reg = <0>;
-				panel_in_dsi: endpoint {
-					remote-endpoint = <&dsi_out_panel>;
-				};
-			};
-		};
-	};
-
-	ports {
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		port@1 {
-			reg = <1>;
-			dsi_out_panel: endpoint {
-				remote-endpoint = <&panel_in_dsi>;
-			};
-		};
-	};
-
-};
-
-&dsi0_in_vp3 {
-	status = "okay";
-};
-
-&route_dsi0 {
-	status = "disabled";
-	connect = <&vp3_out_dsi0>;
 };
 
 &gpu {
@@ -827,23 +763,6 @@
 	status = "disabled";
 };
 
-/*mipi dsi*/
-&i2c4 {
-	status = "okay";
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c4m3_xfer>;
-
-	raspits_ft5426: raspits_ft5426@38 {
-		compatible = "raspits_ft5426";
-		reg = <0x38>;
-	};
-
-	rockpi_mcu: rockpi-mcu@45 {
-		compatible = "rockpi_mcu";
-		reg = <0x45>;
-	};
-};
-
 &i2c5 {
 	status = "disabled";
 
@@ -886,211 +805,6 @@
 		assigned-clock-rates = <12288000>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&i2s0_mclk>;
-	};
-};
-
-/*mipi csi*/
-&i2c8 {
-	status = "okay";
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c8m2_xfer>;
-
-	// ov5647: ov5647@36 {
-    //             status = "okay";
-    //             compatible = "ovti,ov5647";
-    //             reg = <0x36>;
-	// 	clocks = <&cru CLK_MIPI_CAMARAOUT_M0>;
-    //             clock-names = "xvclk";
-	// 	power-domains = <&power RK3588_PD_VI>;
-    //             pinctrl-names = "default";
-    //             pinctrl-0 = <&cam_clkout0>;
-	// 	avdd-supply = <&vcc_mipidphy0>;
-	// 	rockchip,camera-module-index = <1>;
-	// 	rockchip,camera-module-facing = "front";
-	// 	rockchip,camera-module-name = "THDS11073LarganCAM0";
-	// 	rockchip,camera-module-lens-name = "40122a1";
-
-    //             port {
-    //                     ov5647_out: endpoint {
-    //                             remote-endpoint = <&mipidphy0_in_ucam0>;
-    //                             data-lanes = <1 2>;
-    //                     };
-    //             };
-    //     };
-
-	// imx477: imx477@1a {
-    //             compatible = "sony,imx477";
-    //             reg = <0x1a>;
-    //             clocks = <&cru CLK_MIPI_CAMARAOUT_M0>;
-    //             clock-names = "xvclk";
-    //             power-domains = <&power RK3588_PD_VI>;
-    //             pinctrl-names = "default";
-    //             pinctrl-0 = <&cam_clkout0>;
-    //             avdd-supply = <&vcc_mipidphy0>;
-    //             rockchip,camera-module-index = <1>;
-    //             rockchip,camera-module-facing = "front";
-    //             rockchip,camera-module-name = "COOLPIIMXCAM0";
-    //             rockchip,camera-module-lens-name = "IMX477";
-
-    //             port {
-    //                     imx477_out: endpoint {
-    //                             remote-endpoint = <&mipidphy0_in_ucam1>;
-    //                             data-lanes = <1 2>;
-    //                     };
-    //             };
-    //     };
-		
-	imx219: imx219@10 {
-		compatible = "sony,imx219";
-		status = "okay";
-		reg = <0x10>;
-		clocks = <&cru CLK_MIPI_CAMARAOUT_M0>;
-		clock-names = "xvclk";
-		pinctrl-names = "default";
-		pinctrl-0 = <&cam_clkout0>;
-		power-domains = <&power RK3588_PD_VI>;
-		avdd-supply = <&vcc_mipidphy0>;
-		rockchip,camera-module-index = <1>;//<0>
-		rockchip,camera-module-facing =  "front";//"back";
-		rockchip,camera-module-name = "GEIR180089";
-		rockchip,camera-module-lens-name = "LG500627G";
-		port {
-			imx219_out: endpoint {
-				remote-endpoint = <&mipidphy0_in_ucam2>;
-				data-lanes = <1 2>;
-				clock-noncontinuous;
-				link-frequencies =
-					/bits/ 64 <456000000>;
-			};
-		};
-	};
-};
-
-&csi2_dphy0 {
-	status = "okay";
-
-	ports {
-		#address-cells = <1>;
-		#size-cells = <0>;
-		port@0 {
-			reg = <0>;
-			#address-cells = <1>;
-			#size-cells = <0>;
-
-			// mipidphy0_in_ucam0: endpoint@1 {
-			// 	reg = <1>;
-			// 	remote-endpoint = <&ov5647_out>;
-			// 	data-lanes = <1 2>;
-			// };
-
-			// mipidphy0_in_ucam1: endpoint@2 {
-			// 	reg = <2>;
-			// 	remote-endpoint = <&imx477_out>;
-			// 	data-lanes = <1 2>;
-			// };
-			
-			mipidphy0_in_ucam2: endpoint@3 {
-				reg = <3>;
-				remote-endpoint = <&imx219_out>;
-				data-lanes = <1 2>;
-			};
-		};
-		port@1 {
-			reg = <1>;
-			#address-cells = <1>;
-			#size-cells = <0>;
-
-			csidphy0_out: endpoint@0 {
-				reg = <0>;
-				remote-endpoint = <&mipi2_csi2_input>;
-			};
-		};
-	};
-};
-
-&csi2_dphy0_hw {
-	status = "okay";
-};
-
-&mipi2_csi2 {
-	status = "okay";
-
-	ports {
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		port@0 {
-			reg = <0>;
-			#address-cells = <1>;
-			#size-cells = <0>;
-
-			mipi2_csi2_input: endpoint@1 {
-				reg = <1>;
-				remote-endpoint = <&csidphy0_out>;
-			};
-		};
-
-		port@1 {
-			reg = <1>;
-			#address-cells = <1>;
-			#size-cells = <0>;
-
-			mipi2_csi2_output: endpoint@0 {
-				reg = <0>;
-				remote-endpoint = <&cif_mipi2_in0>;
-			};
-		};
-	};
-};
-
-&rkcif {
-	status = "okay";
-};
-
-&rkcif_mipi_lvds2 {
-	status = "okay";
-
-	port {
-		cif_mipi2_in0: endpoint {
-			remote-endpoint = <&mipi2_csi2_output>;
-		};
-	};
-};
-
-&rkcif_mipi_lvds2_sditf {
-	status = "okay";
-
-	port {
-		mipi_lvds2_sditf: endpoint {
-			remote-endpoint = <&isp0_vir0>;
-		};
-	};
-};
-
-
-&rkcif_mmu {
-        status = "okay";
-};
-
-&rkisp0 {
-	status = "okay";
-};
-
-&isp0_mmu {
-	status = "okay";
-};
-
-&rkisp0_vir0 {
-	status = "okay";
-
-	port {
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		isp0_vir0: endpoint@0 {
-			reg = <0>;
-			remote-endpoint = <&mipi_lvds2_sditf>;
-		};
 	};
 };
 
@@ -1207,15 +921,6 @@
 			rockchip,pins = <1 RK_PA4 RK_FUNC_GPIO &pcfg_pull_up>;
 		};
 	};
-		
-	cam {
-		cam_clkout0: cam-clkout0 {
-			rockchip,pins = <1 RK_PB6 1 &pcfg_pull_none>;
-		};
-		cam_en: cam-en {
-			rockchip,pins = <1 RK_PA6 1 &pcfg_pull_none>;
-		};
-	};
 
 	led {
 		gpio_leds: gpio-leds {
@@ -1245,18 +950,6 @@
 		uart9_gpios: uart9-gpios {
 			rockchip,pins = <3 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
-
-		// bt_reset_gpio: bt-reset-gpio {
-		// 	rockchip,pins = <0 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
-		// };
-
-		// bt_wake_gpio: bt-wake-gpio {
-		// 	rockchip,pins = <0 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
-		// };
-
-		// bt_wake_host_irq: bt-wake-host-irq {
-		// 	rockchip,pins = <0 RK_PC5 RK_FUNC_GPIO &pcfg_pull_down>;
-		// };
 	};
 
 	wireless-wlan {
