@@ -47,5 +47,9 @@ enable_uboot_overlays=1
 # CAM1
 #dtoverlay=/dtb/overlay/rk3588-armsom-sige7-camera-ov13850-csi1-overlay.dtbo
 
+# Overlay to expand PCIe3x4 MMIO ranges for MemryX AI Accelerator.
+#dtoverlay=/dtb/overlay/rk3588-pcie3x4-memryx.dtbo
+
+
 #overlay_end
 

@@ -1,0 +1,8 @@
+config MEMRYX_CASCADE_PLUS
+	tristate "MemryX Cascade Plus PCIe Driver Support"
+	depends on PCI && PCI_MSI
+	default n
+	help
+	  Enable support for the MemryX Cascade Plus PCIe AI Accelerator.
+	  Selecting Y will compile the driver directly into the kernel image.
+	  Selecting M will compile it as a module named memx_cascade_plus_pcie.ko.

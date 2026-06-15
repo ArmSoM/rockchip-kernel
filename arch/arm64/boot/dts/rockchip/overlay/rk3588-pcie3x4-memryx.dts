@@ -1,0 +1,20 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright (c) 2026 Armsom CoolPi.
+ * Overlay to expand PCIe3x4 MMIO ranges for MemryX AI Accelerator.
+ */
+
+/dts-v1/;
+/plugin/;
+
+/ {
+    fragment@0 {
+        target = <&pcie3x4>;
+
+        __overlay__ {
+            status = "okay";
+		    ranges = <0x81000000 0x0 0xf0100000 0x0 0xf0100000 0x0 0x100000
+			0x82000000 0x0 0x40000000 0x09 0x00000000 0x0 0x18000000>;
+        };
+    };
+};
