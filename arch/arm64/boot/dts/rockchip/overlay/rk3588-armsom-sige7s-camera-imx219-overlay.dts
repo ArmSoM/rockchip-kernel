@@ -53,7 +53,7 @@
 						remote-endpoint = <&mipidphy0_in_ucam2>;
 						data-lanes = <1 2>;
 						clock-noncontinuous;
-						link-frequencies = <456000000>;
+						link-frequencies = /bits/ 64 <456000000>;
 					};
 				};
 			};
