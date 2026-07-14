@@ -123,18 +123,18 @@
 	leds: leds {
 		compatible = "gpio-leds";
 		pinctrl-names = "default";
-		pinctrl- = <&gpio_leds>;
+		pinctrl-0 = <&gpio_leds>;
 		status = "okay";
 		
 		led1: led-red {
-			label = "led1-r";
-			gpios = <&gpio0 RK_PD0 GPIO_ACTIVE_HIGH>;
-			default-state = "off";
+			label = "led1-red-pwr";
+			gpios = <&gpio0 RK_PC4 GPIO_ACTIVE_LOW>;
+			default-state = "on";
 		};
 		
 		led2: led-green {
-			label = "led2-g";
-			gpios = <&gpio0 RK_PC4 GPIO_ACTIVE_HIGH>;
+			label = "led2-green-usr";
+			gpios = <&gpio0 RK_PD0 GPIO_ACTIVE_HIGH>;
 			default-state = "off";
 		};
 	};
@@ -586,9 +586,9 @@
 };
 
 &usbdrd_dwc3_0 {
-	dr_mode = "host";
+	dr_mode = "otg";
 	//dr_mode = "peripheral";
-	//extcon = <&u2phy0>;
+	extcon = <&u2phy0>;
 	status = "okay";
 };
 
