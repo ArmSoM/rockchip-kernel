@@ -42,6 +42,9 @@
 				clock-names = "xvclk";
 				pinctrl-names = "default";
 				pinctrl-0 = <&cam_clkout0>;
+				VANA-supply = <&vcc_3v3_s0>;   /* 2.8v */
+				VDIG-supply = <&vcc_3v3_s0>;   /* 1.8v */
+				VDDL-supply = <&vcc_3v3_s0>;   /* 1.2v */
 				power-domains = <&power RK3588_PD_VI>;
 				avdd-supply = <&vcc_mipidphy0>;
 				rockchip,camera-module-index = <1>;//<0>

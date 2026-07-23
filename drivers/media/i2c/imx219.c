@@ -15,6 +15,7 @@
  */
 
 #include <linux/clk.h>
+#include <linux/rk-camera-module.h>
 #include <linux/delay.h>
 #include <linux/gpio/consumer.h>
 #include <linux/i2c.h>
@@ -84,7 +85,7 @@
 #define IMX219_REG_DIGITAL_GAIN		0x0158
 #define IMX219_DGTL_GAIN_MIN		0x0100
 #define IMX219_DGTL_GAIN_MAX		0x0fff
-#define IMX219_DGTL_GAIN_DEFAULT	0x0100
+#define IMX219_DGTL_GAIN_DEFAULT	0x0300
 #define IMX219_DGTL_GAIN_STEP		1
 
 #define IMX219_REG_ORIENTATION		0x0172
@@ -119,10 +120,11 @@
 /* IMX219 native and active pixel array size. */
 #define IMX219_NATIVE_WIDTH		3296U
 #define IMX219_NATIVE_HEIGHT		2480U
-#define IMX219_PIXEL_ARRAY_LEFT		8U
-#define IMX219_PIXEL_ARRAY_TOP		8U
+#define IMX219_PIXEL_ARRAY_LEFT		0U
+#define IMX219_PIXEL_ARRAY_TOP		0U
 #define IMX219_PIXEL_ARRAY_WIDTH	3280U
 #define IMX219_PIXEL_ARRAY_HEIGHT	2464U
+#define IMX219_NAME			"imx219"
 
 struct imx219_reg {
 	u16 address;
@@ -209,6 +211,17 @@ static const struct imx219_reg imx219_common_regs[] = {
  * 3280x2464 = mode 2, 1920x1080 = mode 1, 1640x1232 = mode 4, 640x480 = mode 7.
  */
 static const struct imx219_reg mode_3280x2464_regs[] = {
+	{0x0100, 0x00},
+	{0x30eb, 0x0c},
+	{0x30eb, 0x05},
+	{0x300a, 0xff},
+	{0x300b, 0xff},
+	{0x30eb, 0x05},
+	{0x30eb, 0x09},
+	{0x0114, 0x01},
+	{0x0128, 0x00},
+	{0x012a, 0x18},
+	{0x012b, 0x00},
 	{0x0164, 0x00},
 	{0x0165, 0x00},
 	{0x0166, 0x0c},
@@ -221,13 +234,53 @@ static const struct imx219_reg mode_3280x2464_regs[] = {
 	{0x016d, 0xd0},
 	{0x016e, 0x09},
 	{0x016f, 0xa0},
+	{0x0170, 0x01},
+	{0x0171, 0x01},
+	{0x0174, 0x00},
+	{0x0175, 0x00},
+	{0x0301, 0x05},
+	{0x0303, 0x01},
+	{0x0304, 0x03},
+	{0x0305, 0x03},
+	{0x0306, 0x00},
+	{0x0307, 0x39},
+	{0x030b, 0x01},
+	{0x030c, 0x00},
+	{0x030d, 0x72},
 	{0x0624, 0x0c},
 	{0x0625, 0xd0},
 	{0x0626, 0x09},
 	{0x0627, 0xa0},
+	{0x455e, 0x00},
+	{0x471e, 0x4b},
+	{0x4767, 0x0f},
+	{0x4750, 0x14},
+	{0x4540, 0x00},
+	{0x47b4, 0x14},
+	{0x4713, 0x30},
+	{0x478b, 0x10},
+	{0x478f, 0x10},
+	{0x4793, 0x10},
+	{0x4797, 0x0e},
+	{0x479b, 0x0e},
+	{0x0162, 0x0d},
+	{0x0163, 0x78},
 };
 
 static const struct imx219_reg mode_1920_1080_regs[] = {
+	{0x0100, 0x00},
+	{0x30eb, 0x05},
+	{0x30eb, 0x0c},
+	{0x300a, 0xff},
+	{0x300b, 0xff},
+	{0x30eb, 0x05},
+	{0x30eb, 0x09},
+	{0x0114, 0x01},
+	{0x0128, 0x00},
+	{0x012a, 0x18},
+	{0x012b, 0x00},
+	{0x0162, 0x0d},
+	{0x0163, 0x78},
 	{0x0164, 0x02},
 	{0x0165, 0xa8},
 	{0x0166, 0x0a},
@@ -240,13 +293,51 @@ static const struct imx219_reg mode_1920_1080_regs[] = {
 	{0x016d, 0x80},
 	{0x016e, 0x04},
 	{0x016f, 0x38},
+	{0x0170, 0x01},
+	{0x0171, 0x01},
+	{0x0174, 0x00},
+	{0x0175, 0x00},
+	{0x0301, 0x05},
+	{0x0303, 0x01},
+	{0x0304, 0x03},
+	{0x0305, 0x03},
+	{0x0306, 0x00},
+	{0x0307, 0x39},
+	{0x030b, 0x01},
+	{0x030c, 0x00},
+	{0x030d, 0x72},
 	{0x0624, 0x07},
 	{0x0625, 0x80},
 	{0x0626, 0x04},
 	{0x0627, 0x38},
+	{0x455e, 0x00},
+	{0x471e, 0x4b},
+	{0x4767, 0x0f},
+	{0x4750, 0x14},
+	{0x4540, 0x00},
+	{0x47b4, 0x14},
+	{0x4713, 0x30},
+	{0x478b, 0x10},
+	{0x478f, 0x10},
+	{0x4793, 0x10},
+	{0x4797, 0x0e},
+	{0x479b, 0x0e},
+	{0x0162, 0x0d},
+	{0x0163, 0x78},
 };
 
 static const struct imx219_reg mode_1640_1232_regs[] = {
+	{0x0100, 0x00},
+	{0x30eb, 0x0c},
+	{0x30eb, 0x05},
+	{0x300a, 0xff},
+	{0x300b, 0xff},
+	{0x30eb, 0x05},
+	{0x30eb, 0x09},
+	{0x0114, 0x01},
+	{0x0128, 0x00},
+	{0x012a, 0x18},
+	{0x012b, 0x00},
 	{0x0164, 0x00},
 	{0x0165, 0x00},
 	{0x0166, 0x0c},
@@ -259,13 +350,53 @@ static const struct imx219_reg mode_1640_1232_regs[] = {
 	{0x016d, 0x68},
 	{0x016e, 0x04},
 	{0x016f, 0xd0},
+	{0x0170, 0x01},
+	{0x0171, 0x01},
+	{0x0174, 0x01},
+	{0x0175, 0x01},
+	{0x0301, 0x05},
+	{0x0303, 0x01},
+	{0x0304, 0x03},
+	{0x0305, 0x03},
+	{0x0306, 0x00},
+	{0x0307, 0x39},
+	{0x030b, 0x01},
+	{0x030c, 0x00},
+	{0x030d, 0x72},
 	{0x0624, 0x06},
 	{0x0625, 0x68},
 	{0x0626, 0x04},
 	{0x0627, 0xd0},
+	{0x455e, 0x00},
+	{0x471e, 0x4b},
+	{0x4767, 0x0f},
+	{0x4750, 0x14},
+	{0x4540, 0x00},
+	{0x47b4, 0x14},
+	{0x4713, 0x30},
+	{0x478b, 0x10},
+	{0x478f, 0x10},
+	{0x4793, 0x10},
+	{0x4797, 0x0e},
+	{0x479b, 0x0e},
+	{0x0162, 0x0d},
+	{0x0163, 0x78},
 };
 
 static const struct imx219_reg mode_640_480_regs[] = {
+	{0x0100, 0x00},
+	{0x30eb, 0x05},
+	{0x30eb, 0x0c},
+	{0x300a, 0xff},
+	{0x300b, 0xff},
+	{0x30eb, 0x05},
+	{0x30eb, 0x09},
+	{0x0114, 0x01},
+	{0x0128, 0x00},
+	{0x012a, 0x18},
+	{0x012b, 0x00},
+	{0x0162, 0x0d},
+	{0x0163, 0x78},
 	{0x0164, 0x03},
 	{0x0165, 0xe8},
 	{0x0166, 0x08},
@@ -278,10 +409,35 @@ static const struct imx219_reg mode_640_480_regs[] = {
 	{0x016d, 0x80},
 	{0x016e, 0x01},
 	{0x016f, 0xe0},
+	{0x0170, 0x01},
+	{0x0171, 0x01},
+	{0x0174, 0x03},
+	{0x0175, 0x03},
+	{0x0301, 0x05},
+	{0x0303, 0x01},
+	{0x0304, 0x03},
+	{0x0305, 0x03},
+	{0x0306, 0x00},
+	{0x0307, 0x39},
+	{0x030b, 0x01},
+	{0x030c, 0x00},
+	{0x030d, 0x72},
 	{0x0624, 0x06},
 	{0x0625, 0x68},
 	{0x0626, 0x04},
 	{0x0627, 0xd0},
+	{0x455e, 0x00},
+	{0x471e, 0x4b},
+	{0x4767, 0x0f},
+	{0x4750, 0x14},
+	{0x4540, 0x00},
+	{0x47b4, 0x14},
+	{0x4713, 0x30},
+	{0x478b, 0x10},
+	{0x478f, 0x10},
+	{0x4793, 0x10},
+	{0x4797, 0x0e},
+	{0x479b, 0x0e},
 };
 
 static const struct imx219_reg raw8_framefmt_regs[] = {
@@ -470,6 +626,12 @@ struct imx219 {
 
 	/* Current mode */
 	const struct imx219_mode *mode;
+    u32 module_index;
+    const char *module_facing;
+    const char *module_name;
+    const char *len_name;
+    struct v4l2_fwnode_endpoint bus_cfg;
+    u32 cur_vts;
 
 	/*
 	 * Mutex for serialized access:
@@ -485,6 +647,214 @@ static inline struct imx219 *to_imx219(struct v4l2_subdev *_sd)
 {
 	return container_of(_sd, struct imx219, sd);
 }
+
+
+static void imx219_get_module_inf(struct imx219 *imx219,
+				   struct rkmodule_inf *inf)
+{
+	memset(inf, 0, sizeof(*inf));
+	strscpy(inf->base.sensor, IMX219_NAME, sizeof(inf->base.sensor));
+	strscpy(inf->base.module, imx219->module_name,
+		sizeof(inf->base.module));
+	strscpy(inf->base.lens, imx219->len_name,
+		sizeof(inf->base.lens));
+}
+
+
+static int imx219_g_mbus_config(struct v4l2_subdev *sd, unsigned int pad_id,
+				struct v4l2_mbus_config *config)
+{
+	struct imx219 *imx219 = to_imx219(sd);
+	u8 lanes = imx219->bus_cfg.bus.mipi_csi2.num_data_lanes;
+
+	config->type = V4L2_MBUS_CSI2_DPHY;
+	config->bus.mipi_csi2.num_data_lanes = lanes;
+
+	return 0;
+}
+
+static int imx219_enum_frame_interval(struct v4l2_subdev *sd,
+				      struct v4l2_subdev_state *sd_state,
+				      struct v4l2_subdev_frame_interval_enum *fie)
+{
+	if (fie->index >= ARRAY_SIZE(supported_modes))
+		return -EINVAL;
+
+	fie->interval.numerator = 1;
+	fie->interval.denominator = 30;
+	fie->width = supported_modes[fie->index].width;
+	fie->height = supported_modes[fie->index].height;
+
+	return 0;
+}
+
+static int imx219_g_frame_interval(struct v4l2_subdev *sd,
+				  struct v4l2_subdev_frame_interval *fi)
+{
+	struct imx219 *imx219 = to_imx219(sd);
+
+	mutex_lock(&imx219->mutex);
+	fi->interval.numerator = 1;
+	fi->interval.denominator = 30;
+	mutex_unlock(&imx219->mutex);
+
+	return 0;
+}
+
+/* Forward declaration for ioctl */
+static int imx219_write_reg(struct imx219 *imx219, u16 reg, u32 len, u32 val);
+static long imx219_ioctl(struct v4l2_subdev *sd, unsigned int cmd, void *arg)
+{
+	struct imx219 *imx219 = to_imx219(sd);
+	long ret = 0;
+	u32 stream;
+
+	switch (cmd) {
+	case RKMODULE_GET_MODULE_INFO:
+		imx219_get_module_inf(imx219, (struct rkmodule_inf *)arg);
+		break;
+	case RKMODULE_GET_SONY_BRL:
+		*((u32 *)arg) = 0; /* BRL_BINNING = 0 */
+		break;
+	case RKMODULE_GET_CHANNEL_INFO:
+		{
+			struct rkmodule_channel_info *ch_info;
+			ch_info = (struct rkmodule_channel_info *)arg;
+			ch_info->vc = 0;
+			ch_info->width = imx219->mode->width;
+			ch_info->height = imx219->mode->height;
+			ch_info->bus_fmt = MEDIA_BUS_FMT_SRGGB10_1X10;
+		}
+		break;
+	case RKMODULE_GET_CSI_DPHY_PARAM:
+		{
+			struct rkmodule_csi_dphy_param *dphy_param;
+			dphy_param = (struct rkmodule_csi_dphy_param *)arg;
+			memset(dphy_param, 0, sizeof(*dphy_param));
+			dphy_param->vendor = PHY_VENDOR_SAMSUNG;
+		}
+		break;
+	case RKMODULE_GET_EXP_DELAY:
+		{
+			struct rkmodule_exp_delay *exp_delay;
+			exp_delay = (struct rkmodule_exp_delay *)arg;
+			exp_delay->exp_delay = 2;
+			exp_delay->gain_delay = 2;
+			exp_delay->vts_delay = 1;
+		}
+		break;
+	case RKMODULE_SET_QUICK_STREAM:
+		stream = *((u32 *)arg);
+		if (stream)
+			ret = imx219_write_reg(imx219, IMX219_REG_MODE_SELECT,
+				IMX219_REG_VALUE_08BIT, IMX219_MODE_STREAMING);
+		else
+			ret = imx219_write_reg(imx219, IMX219_REG_MODE_SELECT,
+				IMX219_REG_VALUE_08BIT, IMX219_MODE_STANDBY);
+		break;
+	default:
+		ret = -ENOIOCTLCMD;
+		break;
+	}
+	return ret;
+}
+
+#ifdef CONFIG_COMPAT
+static long imx219_compat_ioctl32(struct v4l2_subdev *sd,
+				  unsigned int cmd, unsigned long arg)
+{
+	void __user *up = compat_ptr(arg);
+	struct rkmodule_inf *inf;
+	struct rkmodule_channel_info *ch_info;
+	struct rkmodule_csi_dphy_param *dphy_param;
+	struct rkmodule_exp_delay *exp_delay;
+	long ret;
+	u32 stream;
+	u32 brl = 0;
+
+	switch (cmd) {
+	case RKMODULE_GET_MODULE_INFO:
+		inf = kzalloc(sizeof(*inf), GFP_KERNEL);
+		if (!inf) {
+			ret = -ENOMEM;
+			return ret;
+		}
+
+		ret = imx219_ioctl(sd, cmd, inf);
+		if (!ret) {
+			if (copy_to_user(up, inf, sizeof(*inf))) {
+				kfree(inf);
+				return -EFAULT;
+			}
+		}
+		kfree(inf);
+		break;
+	case RKMODULE_GET_SONY_BRL:
+		ret = imx219_ioctl(sd, cmd, &brl);
+		if (!ret) {
+			if (copy_to_user(up, &brl, sizeof(u32)))
+				return -EFAULT;
+		}
+		break;
+	case RKMODULE_GET_CHANNEL_INFO:
+		ch_info = kzalloc(sizeof(*ch_info), GFP_KERNEL);
+		if (!ch_info) {
+			ret = -ENOMEM;
+			return ret;
+		}
+
+		ret = imx219_ioctl(sd, cmd, ch_info);
+		if (!ret) {
+			ret = copy_to_user(up, ch_info, sizeof(*ch_info));
+			if (ret)
+				ret = -EFAULT;
+		}
+		kfree(ch_info);
+		break;
+	case RKMODULE_GET_CSI_DPHY_PARAM:
+		dphy_param = kzalloc(sizeof(*dphy_param), GFP_KERNEL);
+		if (!dphy_param) {
+			ret = -ENOMEM;
+			return ret;
+		}
+
+		ret = imx219_ioctl(sd, cmd, dphy_param);
+		if (!ret) {
+			ret = copy_to_user(up, dphy_param, sizeof(*dphy_param));
+			if (ret)
+				ret = -EFAULT;
+		}
+		kfree(dphy_param);
+		break;
+	case RKMODULE_GET_EXP_DELAY:
+		exp_delay = kzalloc(sizeof(*exp_delay), GFP_KERNEL);
+		if (!exp_delay) {
+			ret = -ENOMEM;
+			return ret;
+		}
+
+		ret = imx219_ioctl(sd, cmd, exp_delay);
+		if (!ret) {
+			ret = copy_to_user(up, exp_delay, sizeof(*exp_delay));
+			if (ret)
+				ret = -EFAULT;
+		}
+		kfree(exp_delay);
+		break;
+	case RKMODULE_SET_QUICK_STREAM:
+		if (copy_from_user(&stream, up, sizeof(u32)))
+			return -EFAULT;
+		ret = imx219_ioctl(sd, cmd, &stream);
+		break;
+	default:
+		ret = -ENOIOCTLCMD;
+		break;
+	}
+
+	return ret;
+}
+#endif
+
 
 /* Read registers up to 2 at a time */
 static int imx219_read_reg(struct imx219 *imx219, u16 reg, u32 len, u32 *val)
@@ -1198,13 +1568,19 @@ static int imx219_identify_module(struct imx219 *imx219)
 	return 0;
 }
 
+
 static const struct v4l2_subdev_core_ops imx219_core_ops = {
 	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
 	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
+	.ioctl = imx219_ioctl,
+#ifdef CONFIG_COMPAT
+	.compat_ioctl32 = imx219_compat_ioctl32,
+#endif
 };
 
 static const struct v4l2_subdev_video_ops imx219_video_ops = {
 	.s_stream = imx219_set_stream,
+	.g_frame_interval = imx219_g_frame_interval,
 };
 
 static const struct v4l2_subdev_pad_ops imx219_pad_ops = {
@@ -1213,6 +1589,8 @@ static const struct v4l2_subdev_pad_ops imx219_pad_ops = {
 	.set_fmt = imx219_set_pad_format,
 	.get_selection = imx219_get_selection,
 	.enum_frame_size = imx219_enum_frame_size,
+	.get_mbus_config = imx219_g_mbus_config,
+	.enum_frame_interval = imx219_enum_frame_interval,
 };
 
 static const struct v4l2_subdev_ops imx219_subdev_ops = {
@@ -1332,6 +1710,8 @@ static int imx219_init_controls(struct imx219 *imx219)
 	if (ret)
 		goto error;
 
+    dev_err(&client->dev, "imx219_init_controls666\n");
+
 	imx219->sd.ctrl_handler = ctrl_hdlr;
 
 	return 0;
@@ -1400,11 +1780,51 @@ static int imx219_probe(struct i2c_client *client)
 {
 	struct device *dev = &client->dev;
 	struct imx219 *imx219;
+	struct device_node *node = dev->of_node;
+    char facing[2];
 	int ret;
 
 	imx219 = devm_kzalloc(&client->dev, sizeof(*imx219), GFP_KERNEL);
 	if (!imx219)
 		return -ENOMEM;
+
+    /* Parse bus config for later use in ioctl */
+    {
+       struct fwnode_handle *endpoint;
+       struct v4l2_fwnode_endpoint ep_cfg = {
+           .bus_type = V4L2_MBUS_CSI2_DPHY
+       };
+
+       endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(dev), NULL);
+       if (!endpoint) {
+           dev_err(dev, "endpoint node not found\n");
+           return -EINVAL;
+       }
+       ret = v4l2_fwnode_endpoint_alloc_parse(endpoint, &ep_cfg);
+       fwnode_handle_put(endpoint);
+       if (!ret)
+           imx219->bus_cfg = ep_cfg;
+    }
+
+	ret = of_property_read_u32(node, RKMODULE_CAMERA_MODULE_INDEX,
+				   &imx219->module_index);
+	ret |= of_property_read_string(node, RKMODULE_CAMERA_MODULE_FACING,
+				       &imx219->module_facing);
+	ret |= of_property_read_string(node, RKMODULE_CAMERA_MODULE_NAME,
+				       &imx219->module_name);
+	ret |= of_property_read_string(node, RKMODULE_CAMERA_LENS_NAME,
+				       &imx219->len_name);
+
+
+    dev_err(dev, "module_facing == %s \n",imx219->module_facing);
+    dev_err(dev, "module_name == %s \n",imx219->module_name);
+    dev_err(dev, "len_name == %s \n",imx219->len_name);
+
+				       
+	if (ret) {
+		dev_err(dev, "could not get module information!\n");
+		return -EINVAL;
+	}
 
 	v4l2_i2c_subdev_init(&imx219->sd, client, &imx219_subdev_ops);
 
@@ -1490,6 +1910,22 @@ static int imx219_probe(struct i2c_client *client)
 		goto error_handler_free;
 	}
 
+
+    /*
+    * Generate entity name same as IMX415:
+    * m00_back_imx219 7-0010
+    */
+    memset(facing, 0, sizeof(facing));
+    if (strcmp(imx219->module_facing, "back") == 0)
+       facing[0] = 'b';
+    else
+       facing[0] = 'f';
+
+    snprintf(imx219->sd.name, sizeof(imx219->sd.name), "m%02d_%s_%s %s",
+        imx219->module_index, facing,
+        IMX219_NAME, dev_name(imx219->sd.dev));
+
+ 
 	ret = v4l2_async_register_subdev_sensor(&imx219->sd);
 	if (ret < 0) {
 		dev_err(dev, "failed to register sensor sub-device: %d\n", ret);
