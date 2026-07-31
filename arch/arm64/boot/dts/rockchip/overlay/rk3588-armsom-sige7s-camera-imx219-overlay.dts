@@ -48,9 +48,9 @@
 				power-domains = <&power RK3588_PD_VI>;
 				avdd-supply = <&vcc_mipidphy0>;
 				rockchip,camera-module-index = <1>;//<0>
-				rockchip,camera-module-facing =  "front";//"back";
-				rockchip,camera-module-name = "GEIR180089";
-				rockchip,camera-module-lens-name = "LG500627G";
+				rockchip,camera-module-facing =  "back";
+				rockchip,camera-module-name = "rpi-camera-v2";
+				rockchip,camera-module-lens-name = "default";
 				port {
 					imx219_out: endpoint {
 						remote-endpoint = <&mipidphy0_in_ucam2>;

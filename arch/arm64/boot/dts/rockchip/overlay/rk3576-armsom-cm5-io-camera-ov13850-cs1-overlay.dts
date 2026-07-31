@@ -41,8 +41,8 @@
 				reset-gpios = <&gpio2 RK_PB5 GPIO_ACTIVE_HIGH>;
 				rockchip,camera-module-index = <0>;
 				rockchip,camera-module-facing = "back";
-				rockchip,camera-module-name = "ZC-OV13850R2A-V1";
-				rockchip,camera-module-lens-name = "Largan-50064B31";
+				rockchip,camera-module-name = "rpi-camera-v2";
+				rockchip,camera-module-lens-name = "default";
 				port {
 					ov13850_out0: endpoint {
 						remote-endpoint = <&mipidphy0_in_ucam0>;
