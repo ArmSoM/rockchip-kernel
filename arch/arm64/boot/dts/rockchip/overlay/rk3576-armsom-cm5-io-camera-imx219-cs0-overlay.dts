@@ -42,8 +42,8 @@
 				VDDL-supply = <&vcc_3v3_s0>;   /* 1.2v */
 				rockchip,camera-module-index = <1>;
 				rockchip,camera-module-facing = "back";
-				rockchip,camera-module-name = "ZC-OV13850R2A-V1";
-				rockchip,camera-module-lens-name = "Largan-50064B31";
+				rockchip,camera-module-name = "rpi-camera-v2";
+				rockchip,camera-module-lens-name = "default";
 				port {
 					imx219_out: endpoint {
 						remote-endpoint = <&mipidphy3_in_ucam3>;
