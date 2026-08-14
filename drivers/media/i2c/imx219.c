@@ -71,7 +71,6 @@
 #define IMX219_REG_EXPOSURE		0x015a
 #define IMX219_EXPOSURE_MIN		4
 #define IMX219_EXPOSURE_STEP		1
-#define IMX219_EXPOSURE_DEFAULT		0x640
 #define IMX219_EXPOSURE_MAX		65535
 
 /* Analog gain control */
@@ -85,7 +84,7 @@
 #define IMX219_REG_DIGITAL_GAIN		0x0158
 #define IMX219_DGTL_GAIN_MIN		0x0100
 #define IMX219_DGTL_GAIN_MAX		0x0fff
-#define IMX219_DGTL_GAIN_DEFAULT	0x0300
+#define IMX219_DGTL_GAIN_DEFAULT	0x0100   
 #define IMX219_DGTL_GAIN_STEP		1
 
 #define IMX219_REG_ORIENTATION		0x0172
@@ -148,6 +147,8 @@ struct imx219_mode {
 
 	/* V-timing */
 	unsigned int vts_def;
+
+	unsigned int exp_def;
 
 	/* Default register values */
 	struct imx219_reg_list reg_list;
@@ -543,6 +544,7 @@ static const struct imx219_mode supported_modes[] = {
 			.height = 2464
 		},
 		.vts_def = IMX219_VTS_15FPS,
+		.exp_def = 0x0640,          
 		.reg_list = {
 			.num_of_regs = ARRAY_SIZE(mode_3280x2464_regs),
 			.regs = mode_3280x2464_regs,
@@ -560,6 +562,7 @@ static const struct imx219_mode supported_modes[] = {
 			.height = 1080
 		},
 		.vts_def = IMX219_VTS_30FPS_1080P,
+		.exp_def = 0x0080,          
 		.reg_list = {
 			.num_of_regs = ARRAY_SIZE(mode_1920_1080_regs),
 			.regs = mode_1920_1080_regs,
@@ -577,6 +580,7 @@ static const struct imx219_mode supported_modes[] = {
 			.height = 2464
 		},
 		.vts_def = IMX219_VTS_30FPS_BINNED,
+		.exp_def = 0x0080,          
 		.reg_list = {
 			.num_of_regs = ARRAY_SIZE(mode_1640_1232_regs),
 			.regs = mode_1640_1232_regs,
@@ -594,6 +598,7 @@ static const struct imx219_mode supported_modes[] = {
 			.height = 960
 		},
 		.vts_def = IMX219_VTS_30FPS_640x480,
+		.exp_def = 0x0080,          
 		.reg_list = {
 			.num_of_regs = ARRAY_SIZE(mode_640_480_regs),
 			.regs = mode_640_480_regs,
@@ -626,12 +631,12 @@ struct imx219 {
 
 	/* Current mode */
 	const struct imx219_mode *mode;
-    u32 module_index;
-    const char *module_facing;
-    const char *module_name;
-    const char *len_name;
-    struct v4l2_fwnode_endpoint bus_cfg;
-    u32 cur_vts;
+	u32 module_index;
+	const char *module_facing;
+	const char *module_name;
+	const char *len_name;
+	struct v4l2_fwnode_endpoint bus_cfg;
+	u32 cur_vts;
 
 	/*
 	 * Mutex for serialized access:
@@ -1005,8 +1010,8 @@ static int imx219_set_ctrl(struct v4l2_ctrl *ctrl)
 
 		/* Update max exposure while meeting expected vblanking */
 		exposure_max = imx219->mode->height + ctrl->val - 4;
-		exposure_def = (exposure_max < IMX219_EXPOSURE_DEFAULT) ?
-			exposure_max : IMX219_EXPOSURE_DEFAULT;
+		exposure_def = (exposure_max < imx219->mode->exp_def) ?
+			exposure_max : imx219->mode->exp_def;
 		__v4l2_ctrl_modify_range(imx219->exposure,
 					 imx219->exposure->minimum,
 					 exposure_max, imx219->exposure->step,
@@ -1215,10 +1220,10 @@ static int imx219_set_pad_format(struct v4l2_subdev *sd,
 					 mode->vts_def - mode->height);
 		__v4l2_ctrl_s_ctrl(imx219->vblank,
 				   mode->vts_def - mode->height);
-		/* Update max exposure while meeting expected vblanking */
+		/* Update max exposure and default exposure */
 		exposure_max = mode->vts_def - 4;
-		exposure_def = (exposure_max < IMX219_EXPOSURE_DEFAULT) ?
-			exposure_max : IMX219_EXPOSURE_DEFAULT;
+		exposure_def = (exposure_max < mode->exp_def) ?
+			exposure_max : mode->exp_def;
 		__v4l2_ctrl_modify_range(imx219->exposure,
 					 imx219->exposure->minimum,
 					 exposure_max, imx219->exposure->step,
@@ -1648,8 +1653,8 @@ static int imx219_init_controls(struct imx219 *imx219)
 	if (imx219->hblank)
 		imx219->hblank->flags |= V4L2_CTRL_FLAG_READ_ONLY;
 	exposure_max = imx219->mode->vts_def - 4;
-	exposure_def = (exposure_max < IMX219_EXPOSURE_DEFAULT) ?
-		exposure_max : IMX219_EXPOSURE_DEFAULT;
+	exposure_def = (exposure_max < imx219->mode->exp_def) ?
+		exposure_max : imx219->mode->exp_def;
 	imx219->exposure = v4l2_ctrl_new_std(ctrl_hdlr, &imx219_ctrl_ops,
 					     V4L2_CID_EXPOSURE,
 					     IMX219_EXPOSURE_MIN, exposure_max,
@@ -1709,8 +1714,6 @@ static int imx219_init_controls(struct imx219 *imx219)
 					      &props);
 	if (ret)
 		goto error;
-
-    dev_err(&client->dev, "imx219_init_controls666\n");
 
 	imx219->sd.ctrl_handler = ctrl_hdlr;
 
@@ -1781,30 +1784,30 @@ static int imx219_probe(struct i2c_client *client)
 	struct device *dev = &client->dev;
 	struct imx219 *imx219;
 	struct device_node *node = dev->of_node;
-    char facing[2];
+	char facing[2];
 	int ret;
 
 	imx219 = devm_kzalloc(&client->dev, sizeof(*imx219), GFP_KERNEL);
 	if (!imx219)
 		return -ENOMEM;
 
-    /* Parse bus config for later use in ioctl */
-    {
-       struct fwnode_handle *endpoint;
-       struct v4l2_fwnode_endpoint ep_cfg = {
-           .bus_type = V4L2_MBUS_CSI2_DPHY
-       };
+	/* Parse bus config for later use in ioctl */
+	{
+		struct fwnode_handle *endpoint;
+		struct v4l2_fwnode_endpoint ep_cfg = {
+			.bus_type = V4L2_MBUS_CSI2_DPHY
+		};
 
-       endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(dev), NULL);
-       if (!endpoint) {
-           dev_err(dev, "endpoint node not found\n");
-           return -EINVAL;
-       }
-       ret = v4l2_fwnode_endpoint_alloc_parse(endpoint, &ep_cfg);
-       fwnode_handle_put(endpoint);
-       if (!ret)
-           imx219->bus_cfg = ep_cfg;
-    }
+		endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(dev), NULL);
+		if (!endpoint) {
+			dev_err(dev, "endpoint node not found\n");
+			return -EINVAL;
+		}
+		ret = v4l2_fwnode_endpoint_alloc_parse(endpoint, &ep_cfg);
+		fwnode_handle_put(endpoint);
+		if (!ret)
+			imx219->bus_cfg = ep_cfg;
+	}
 
 	ret = of_property_read_u32(node, RKMODULE_CAMERA_MODULE_INDEX,
 				   &imx219->module_index);
@@ -1815,12 +1818,6 @@ static int imx219_probe(struct i2c_client *client)
 	ret |= of_property_read_string(node, RKMODULE_CAMERA_LENS_NAME,
 				       &imx219->len_name);
 
-
-    dev_err(dev, "module_facing == %s \n",imx219->module_facing);
-    dev_err(dev, "module_name == %s \n",imx219->module_name);
-    dev_err(dev, "len_name == %s \n",imx219->len_name);
-
-				       
 	if (ret) {
 		dev_err(dev, "could not get module information!\n");
 		return -EINVAL;
@@ -1909,23 +1906,23 @@ static int imx219_probe(struct i2c_client *client)
 		dev_err(dev, "failed to init entity pads: %d\n", ret);
 		goto error_handler_free;
 	}
+	
+
+	/*
+	 * Generate entity name same as IMX415:
+	 * m00_back_imx219 7-0010
+	 */
+	memset(facing, 0, sizeof(facing));
+	if (strcmp(imx219->module_facing, "back") == 0)
+		facing[0] = 'b';
+	else
+		facing[0] = 'f';
+
+	snprintf(imx219->sd.name, sizeof(imx219->sd.name), "m%02d_%s_%s %s",
+		imx219->module_index, facing,
+		IMX219_NAME, dev_name(imx219->sd.dev));
 
 
-    /*
-    * Generate entity name same as IMX415:
-    * m00_back_imx219 7-0010
-    */
-    memset(facing, 0, sizeof(facing));
-    if (strcmp(imx219->module_facing, "back") == 0)
-       facing[0] = 'b';
-    else
-       facing[0] = 'f';
-
-    snprintf(imx219->sd.name, sizeof(imx219->sd.name), "m%02d_%s_%s %s",
-        imx219->module_index, facing,
-        IMX219_NAME, dev_name(imx219->sd.dev));
-
- 
 	ret = v4l2_async_register_subdev_sensor(&imx219->sd);
 	if (ret < 0) {
 		dev_err(dev, "failed to register sensor sub-device: %d\n", ret);
