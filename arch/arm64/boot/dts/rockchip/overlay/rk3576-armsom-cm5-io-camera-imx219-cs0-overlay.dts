@@ -36,10 +36,12 @@
 				clocks = <&cru CLK_MIPI_CAMERAOUT_M1>;
 				clock-names = "xvclk";
 				pinctrl-names = "rockchip,camera_default";
-				pinctrl-0 = <&cam_clk1m1_clk1>;
-				VANA-supply = <&vcc_3v3_s0>;   /* 2.8v */
-				VDIG-supply = <&vcc_3v3_s0>;   /* 1.8v */
-				VDDL-supply = <&vcc_3v3_s0>;   /* 1.2v */
+				// pinctrl-0 = <&cam_clk1m1_clk1>;
+				pinctrl-0 = <&cam_clk2m1_clk2>;
+				// VANA-supply = <&vcc_3v3_s0>;   /* 2.8v */
+				// VDIG-supply = <&vcc_3v3_s0>;   /* 1.8v */
+				// VDDL-supply = <&vcc_3v3_s0>;   /* 1.2v */
+				pwdn-gpios  = <&gpio3 RK_PD4 GPIO_ACTIVE_HIGH>;
 				rockchip,camera-module-index = <1>;
 				rockchip,camera-module-facing = "back";
 				rockchip,camera-module-name = "rpi-camera-v2";
