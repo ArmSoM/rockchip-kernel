@@ -48,6 +48,11 @@ board_info() {
 				BOARD_DTB='rk3588-armsom-aim7-io.dtb'
 				BOARD_uEnv='uEnvarmsom-aim7-io.txt'
 				;;
+			armsom-cm7s-io)
+				BOARD_NAME='armsom-cm7s-io'
+				BOARD_DTB='rk3588s-armsom-cm7s-io.dtb'
+				BOARD_uEnv='uEnvarmsom-cm7s-io.txt'
+				;;
 			*)
 				echo "Device ID Error !!!"
 				BOARD_NAME='armsom-sige7'
