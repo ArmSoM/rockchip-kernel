@@ -89,6 +89,17 @@
 		vin-supply = <&avcc_1v8_s0>;
 	};
 
+	vcc3v3_pcie20: vcc3v3-pcie20 {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc3v3_pcie20";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		enable-active-high;
+		gpio = <&gpio3 RK_PB7 GPIO_ACTIVE_HIGH>;
+		startup-delay-us = <5000>;
+		vin-supply = <&vcc_3v3_s3>;
+	};
+
 	vcc5v0_host: vcc5v0-host {
 		compatible = "regulator-fixed";
 		regulator-name = "vcc5v0_host";
@@ -109,70 +120,36 @@
 		regulator-min-microvolt = <5000000>;
 		regulator-max-microvolt = <5000000>;
 		enable-active-high;
-		gpio = <&gpio4 RK_PA4 GPIO_ACTIVE_HIGH>;
+		gpio = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
 		vin-supply = <&vcc5v0_usb>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&typec5v_pwren>;
-	};
-
-	sdio_pwrseq: sdio-pwrseq {
-		compatible = "mmc-pwrseq-simple";
-		clocks = <&hym8563>;
-		clock-names = "ext_clock";
-		pinctrl-names = "default";
-		pinctrl-0 = <&wifi_enable_h>;
-		post-power-on-delay-ms = <200>;
-		reset-gpios = <&gpio0 RK_PD0 GPIO_ACTIVE_LOW>;
-	};
-
-	wireless_bluetooth: wireless-bluetooth {
-		compatible = "bluetooth-platdata";
-		clocks = <&hym8563>;
-		clock-names = "ext_clock";
-		uart_rts_gpios = <&gpio3 RK_PD2 GPIO_ACTIVE_LOW>;
-		pinctrl-names = "default", "rts_gpio";
-		pinctrl-0 = <&uart9m2_rtsn>, <&bt_reset_gpio>, <&bt_wake_gpio>, <&bt_irq_gpio>;
-		pinctrl-1 = <&uart9_gpios>;
-		BT,reset_gpio    = <&gpio0 RK_PD3 GPIO_ACTIVE_HIGH>;
-		BT,wake_gpio     = <&gpio0 RK_PC6 GPIO_ACTIVE_HIGH>;
-		BT,wake_host_irq = <&gpio0 RK_PC5 GPIO_ACTIVE_HIGH>;
-		status = "okay";
-	};
-
-	wireless_wlan: wireless-wlan {
-		compatible = "wlan-platdata";
-		wifi_chip_type = "ap6256";
-		pinctrl-names = "default";
-		pinctrl-0 = <&wifi_host_wake_irq>;
-		WIFI,host_wake_irq = <&gpio0 RK_PA0 GPIO_ACTIVE_HIGH>;
-		WIFI,poweren_gpio = <&gpio0 RK_PD0 GPIO_ACTIVE_HIGH>;
-		status = "okay";
 	};
 
 	es8388_sound: es8388-sound {
 		status = "okay";
 		compatible = "rockchip,multicodecs-card";
 		rockchip,card-name = "rockchip,es8388";
-		hp-det-gpio = <&gpio3 RK_PC6 GPIO_ACTIVE_HIGH>;
+		hp-det-gpio = <&gpio0 RK_PC6 GPIO_ACTIVE_LOW>;
 		io-channels = <&saradc 3>;
 		io-channel-names = "adc-detect";
 		keyup-threshold-microvolt = <1800000>;
 		poll-interval = <100>;
-		hp-con-gpio = <&gpio0 RK_PC2 GPIO_ACTIVE_HIGH>;
-		rockchip,aux-devs = <&aw87xxx_pa1 &aw87xxx_pa2>;
+		// hp-con-gpio = <&gpio0 RK_PC2 GPIO_ACTIVE_HIGH>;
+		// rockchip,aux-devs = <&aw87xxx_pa1 &aw87xxx_pa2>;
 		rockchip,format = "i2s";
 		rockchip,mclk-fs = <256>;
-		rockchip,cpu = <&i2s2_2ch>;
+		rockchip,cpu = <&i2s0_8ch>;
 		rockchip,codec = <&es8388>;
 		rockchip,audio-routing =
 			"Headphone", "LOUT1",
 			"Headphone", "ROUT1",
-			"Headphone", "Headphone Power",
-			"Headphone", "Headphone Power",
-			"LINPUT1", "Main Mic",
+			// "Headphone", "Headphone Power",
+			// "Headphone", "Headphone Power",
+			// "LINPUT1", "Main Mic",
 			"LINPUT2", "Main Mic",
-			"RINPUT1", "Headset Mic",
-			"RINPUT2", "Headset Mic";
+			// "RINPUT1", "Headset Mic",
+			"RINPUT2", "Main Mic";
 		pinctrl-names = "default";
 		pinctrl-0 = <&hp_det>;
 		play-pause-key {
@@ -252,23 +229,6 @@
 	};
 };
 
-&sdio {
-	max-frequency = <150000000>;
-	no-sd;
-	no-mmc;
-	bus-width = <4>;
-	disable-wp;
-	cap-sd-highspeed;
-	cap-sdio-irq;
-	keep-power-in-suspend;
-	mmc-pwrseq = <&sdio_pwrseq>;
-	non-removable;
-	pinctrl-names = "default";
-	pinctrl-0 = <&sdiom1_pins>;
-	sd-uhs-sdr104;
-	status = "okay";
-};
-
 &sdmmc {
 	max-frequency = <150000000>;
 	no-sdio;
@@ -286,19 +246,19 @@
 &i2c3 {
 	status = "okay";
 	pinctrl-names = "default";
-	pinctrl-0 = <&i2c3m1_xfer>;
+	pinctrl-0 = <&i2c3m2_xfer>;
 
-	es8388: es8388@11 {
+	es8388: es8388@10 {
 		status = "okay";
 		#sound-dai-cells = <0>;
 		compatible = "everest,es8388", "everest,es8323";
-		reg = <0x11>;
-		clocks = <&mclkout_i2s2>;
+		reg = <0x10>;
+		clocks = <&mclkout_i2s0>;
 		clock-names = "mclk";
-		assigned-clocks = <&mclkout_i2s2>;
+		assigned-clocks = <&mclkout_i2s0>;
 		assigned-clock-rates = <12288000>;
 		pinctrl-names = "default";
-		pinctrl-0 = <&i2s2m1_mclk>;
+		pinctrl-0 = <&i2s0_mclk>;
 	};
 };
 
@@ -407,12 +367,12 @@
 	};
 };
 
-&i2s2_2ch {
+&i2s0_8ch {
 	status = "okay";
-	pinctrl-0 = <&i2s2m1_lrck
-	             &i2s2m1_sclk
-	             &i2s2m1_sdi
-	             &i2s2m1_sdo>;
+	pinctrl-0 = <&i2s0_lrck
+		     &i2s0_sclk
+		     &i2s0_sdi0
+		     &i2s0_sdo0>;
 };
 
 &sata0 {
@@ -424,6 +384,7 @@
 // phy0
 &pcie2x1l2 {
 	reset-gpios = <&gpio3 RK_PD1 GPIO_ACTIVE_HIGH>;
+	vpcie3v3-supply = <&vcc3v3_pcie20>;
 	status = "okay";
 };
 
@@ -434,19 +395,13 @@
 		};
 
 		typec5v_pwren: typec5v-pwren {
-			rockchip,pins = <4 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
+			rockchip,pins = <3 RK_PC5 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 	};
 
 	usb {
 		vcc5v0_host_en: vcc5v0-host-en {
 			rockchip,pins = <4 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
-		};
-	};
-
-	sdio-pwrseq {
-		wifi_enable_h: wifi-enable-h {
-			rockchip,pins = <0 RK_PD0 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 	};
 
@@ -459,24 +414,6 @@
 	hym8563 {
 		hym8563_int: hym8563-int {
 			rockchip,pins = <0 RK_PB0 RK_FUNC_GPIO &pcfg_pull_up>;
-		};
-	};
-
-	wireless-bluetooth {
-		uart9_gpios: uart9-gpios {
-			rockchip,pins = <3 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
-		};
-
-		bt_reset_gpio: bt-reset-gpio {
-			rockchip,pins = <0 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
-		};
-
-		bt_wake_gpio: bt-wake-gpio {
-			rockchip,pins = <0 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
-		};
-
-		bt_irq_gpio: bt-irq-gpio {
-			rockchip,pins = <0 RK_PC5 RK_FUNC_GPIO &pcfg_pull_down>;
 		};
 	};
 
@@ -644,34 +581,6 @@
 	status = "disabled";
 	pinctrl-names = "default";
 	pinctrl-0 = <&uart4m2_xfer>;
-};
-
-&uart9 {
-	status = "okay";
-	pinctrl-names = "default";
-	pinctrl-0 = <&uart9m2_xfer &uart9m2_ctsn>;
-};
-
-&i2c1 {
-	status = "okay";
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c1m2_xfer>;
-
-	aw87xxx_pa1: aw87xxx_pa1@59 {
-		compatible = "awinic,aw87xxx_pa";
-		#sound-dai-cells = <0>;
-		reg = <0x59>;
-		dev_index = <0>;
-		status = "okay";
-	};
-
-	aw87xxx_pa2: aw87xxx_pa2@5a {
-		compatible = "awinic,aw87xxx_pa";
-		#sound-dai-cells = <0>;
-		reg = <0x5a>;
-		dev_index = <1>;
-		status = "okay";
-	};
 };
 
 &i2c4 {
