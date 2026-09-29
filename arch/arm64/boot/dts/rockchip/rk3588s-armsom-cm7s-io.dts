@@ -40,7 +40,7 @@
 
 	test-power {
 		status = "okay";
-	};
+	};		
 
 	vcc5v0_usbdcin: vcc5v0-usbdcin {
 		compatible = "regulator-fixed";
@@ -166,7 +166,7 @@
 		status = "okay";
 
 		led@1 {
-			gpios = <&gpio4 RK_PB6 GPIO_ACTIVE_HIGH>;
+			gpios = <&gpio0 RK_PD3 GPIO_ACTIVE_HIGH>;
 			label = "status_led";
 			linux,default-trigger = "heartbeat";
 			linux,default-trigger-delay-ms = <0>;
@@ -425,7 +425,7 @@
 
 	leds {
 		led_gpio: led-gpio {
-			rockchip,pins = <4 RK_PB6 RK_FUNC_GPIO &pcfg_pull_none>;
+			rockchip,pins = <0 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 	};
 
@@ -552,11 +552,6 @@
 	status = "okay";
 };
 
-&pwm13 {
-	pinctrl-names = "active";
-	pinctrl-0 = <&pwm13m2_pins>;
-	status = "disabled";
-};
 
 &pwm14 {
 	pinctrl-names = "active";

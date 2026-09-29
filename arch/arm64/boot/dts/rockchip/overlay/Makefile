@@ -101,7 +101,8 @@ dtbo-$(CONFIG_CPU_RK3588) += \
 	rk3588-armsom-w3-display-1200x1900-10.1hd-overlay.dtbo \
 	rk3588-armsom-w3-camera-ov13850-csi0-overlay.dtbo \
 	rk3588-armsom-sige7s-camera-imx219-overlay.dtbo \
-	rk3588-armsom-sige7s-display-800x480-7hd-overlay.dtbo
+	rk3588-armsom-sige7s-display-800x480-7hd-overlay.dtbo \
+	rk3588s-armsom-cm7s-io-display-1200x1900-10.1hd-overlay.dtbo
 
 dtbo-y += \
 	armsom-wdt-overlay.dtbo
