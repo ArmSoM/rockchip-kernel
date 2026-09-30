@@ -106,7 +106,7 @@
 		regulator-boot-on;
 		regulator-always-on;
 		enable-active-high;
-		gpio = <&gpio4 RK_PA2 GPIO_ACTIVE_HIGH>;
+		gpio = <&gpio3 RK_PC4 GPIO_ACTIVE_HIGH>;
 		regulator-min-microvolt = <5000000>;
 		regulator-max-microvolt = <5000000>;
 		vin-supply = <&vcc5v0_usb>;
@@ -401,7 +401,7 @@
 
 	usb {
 		vcc5v0_host_en: vcc5v0-host-en {
-			rockchip,pins = <4 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
+			rockchip,pins = <3 RK_PC4 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 	};
 
@@ -576,12 +576,6 @@
 	status = "disabled";
 	pinctrl-names = "default";
 	pinctrl-0 = <&uart4m2_xfer>;
-};
-
-&i2c4 {
-	status = "disabled";
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c4m3_xfer>;
 };
 
 &i2c5 {
