@@ -299,8 +299,6 @@
                 tp-size = <89>;
                 tp-supply = <&vcc_lcd_mipi1>;
                 configfile-num = <1>; 
-                // touchscreen-inverted-x;
-                // touchscreen-inverted-y; 
             };
 		};
 	};
