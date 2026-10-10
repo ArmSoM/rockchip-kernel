@@ -135,8 +135,6 @@
 		io-channel-names = "adc-detect";
 		keyup-threshold-microvolt = <1800000>;
 		poll-interval = <100>;
-		// hp-con-gpio = <&gpio0 RK_PC2 GPIO_ACTIVE_HIGH>;
-		// rockchip,aux-devs = <&aw87xxx_pa1 &aw87xxx_pa2>;
 		rockchip,format = "i2s";
 		rockchip,mclk-fs = <256>;
 		rockchip,cpu = <&i2s0_8ch>;
@@ -152,11 +150,6 @@
 			"RINPUT2", "Main Mic";
 		pinctrl-names = "default";
 		pinctrl-0 = <&hp_det>;
-		play-pause-key {
-			label = "playpause";
-			linux,code = <KEY_PLAYPAUSE>;
-			press-threshold-microvolt = <2000>;
-		};
 	};
 
 	leds: gpio-leds {
@@ -187,13 +180,6 @@
 			70000   5
 		>;
 		status = "okay";
-	};
-
-	ext_cam_ov5647_clk: external-camera-ov5647-clock {
-		compatible = "fixed-clock";
-		clock-frequency = <25000000>;
-		clock-output-names = "ext_cam_ov5647_clk";
-		#clock-cells = <0>;
 	};
 };
 
@@ -278,26 +264,6 @@
 		interrupt-parent = <&gpio0>;
 		interrupts = <RK_PB0 IRQ_TYPE_LEVEL_LOW>;
 		status = "okay";
-	};
-
-	sc89890: sc89890@6a {
-		compatible = "sc,sc89890";
-		reg = <0x6a>;
-		status = "okay";
-		pinctrl-names = "default";
-		pinctrl-0 = <&charger_ok>;
-
-		interrupt-parent = <&gpio1>;
-		interrupts = <RK_PC0 IRQ_TYPE_EDGE_FALLING>;
-
-		sc,battery-regulation-voltage = <4350000>;
-		sc,charge-current = <4000000>;
-		sc,termination-current = <100000>;
-		sc,precharge-current = <500000>;
-		sc,minimum-sys-voltage = <3400000>;
-		sc,thermal-regulation-threshold = <4000000>;
-		sc,ibatcomp-clamp-microvolt = <100000>;
-		sc,ibatcomp-micro-ohms = <20>;
 	};
 
 	usbc0: fusb302@22 {
@@ -434,13 +400,6 @@
 			rockchip,pins = <3 RK_PD1 RK_FUNC_GPIO &pcfg_pull_up>;
 		};
 	};
-
-	charger {
-		charger_ok: charger_ok {
-			rockchip,pins = <1 RK_PC0 RK_FUNC_GPIO &pcfg_pull_up>,
-			                <1 RK_PC1 RK_FUNC_GPIO &pcfg_pull_up>;
-		};
-	};
 };
 
 &u2phy0_otg {
@@ -458,7 +417,8 @@
 
 &usbdrd_dwc3_0 {
 	status = "okay";
-	dr_mode = "otg";
+	dr_mode = "peripheral";
+	phy_mode = "utmi_wide";
 	usb-role-switch;
 	port {
 		#address-cells = <1>;
