@@ -160,7 +160,7 @@
 
 		led@1 {
 			gpios = <&gpio0 RK_PD3 GPIO_ACTIVE_HIGH>;
-			label = "status_led";
+			label = "led-green-usr";
 			linux,default-trigger = "heartbeat";
 			linux,default-trigger-delay-ms = <0>;
 		};
