@@ -349,7 +349,7 @@ static const struct regval imx219_linear_10bit_640x480_regs[] = {
 };
 
 /* 1920x1080 cropped 30fps mode (supported_modes[2]). */
-#define IMX219_DEFAULT_MODE_INDEX 2
+#define IMX219_DEFAULT_MODE_INDEX 1
 
 static const struct imx219_mode supported_modes[] = {
 	{
