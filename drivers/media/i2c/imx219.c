@@ -348,6 +348,9 @@ static const struct regval imx219_linear_10bit_640x480_regs[] = {
 	{REG_NULL, 0x00},
 };
 
+/* 1920x1080 cropped 30fps mode (supported_modes[2]). */
+#define IMX219_DEFAULT_MODE_INDEX 2
+
 static const struct imx219_mode supported_modes[] = {
 	{
 		/* 2x2 binned 30fps mode */
@@ -358,7 +361,7 @@ static const struct imx219_mode supported_modes[] = {
 			.denominator = 300000,
 		},
 		.exp_def = 0x0080,
-		.hts_def = 0x05dc * 2,
+		.hts_def = 0x0d78,
 		.vts_def = 0x06e3,
 		.reg_list = imx219_linear_10bit_1640x1232_regs,
 		.hdr_mode = NO_HDR,
@@ -373,7 +376,7 @@ static const struct imx219_mode supported_modes[] = {
 			.denominator = 150000,
 		},
 		.exp_def = 0x0640,
-		.hts_def = 0x05dc * 4,
+		.hts_def = 0x0d78,
 		.vts_def = 0x0dc6,
 		.reg_list = imx219_linear_10bit_3280x2464_regs,
 		.hdr_mode = NO_HDR,
@@ -388,7 +391,7 @@ static const struct imx219_mode supported_modes[] = {
 			.denominator = 300000,
 		},
 		.exp_def = 0x0080,
-		.hts_def = 0x05dc * 2,
+		.hts_def = 0x0d78,
 		.vts_def = 0x06e3,
 		.reg_list = imx219_linear_10bit_1920x1080_regs,
 		.hdr_mode = NO_HDR,
@@ -403,7 +406,7 @@ static const struct imx219_mode supported_modes[] = {
 			.denominator = 300000,
 		},
 		.exp_def = 0x0080,
-		.hts_def = 0x05dc * 2,
+		.hts_def = 0x0d78,
 		.vts_def = 0x06e3,
 		.reg_list = imx219_linear_10bit_640x480_regs,
 		.hdr_mode = NO_HDR,
@@ -1059,7 +1062,8 @@ static int imx219_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
 	struct imx219 *imx219 = to_imx219(sd);
 	struct v4l2_mbus_framefmt *try_fmt =
 				v4l2_subdev_get_try_format(sd, fh->state, 0);
-	const struct imx219_mode *def_mode = &supported_modes[0];
+	const struct imx219_mode *def_mode =
+			&supported_modes[IMX219_DEFAULT_MODE_INDEX];
 
 	mutex_lock(&imx219->mutex);
 	/* Initialize try_fmt */
@@ -1409,8 +1413,8 @@ static int imx219_probe(struct i2c_client *client,
 		}
 	}
 	if (i == ARRAY_SIZE(supported_modes))
-		imx219->cur_mode = &supported_modes[0];
-	imx219->cur_mode = &supported_modes[0];
+		imx219->cur_mode = &supported_modes[IMX219_DEFAULT_MODE_INDEX];
+	imx219->cur_mode = &supported_modes[IMX219_DEFAULT_MODE_INDEX];
 
 	imx219->xvclk = devm_clk_get(dev, "xvclk");
 	if (IS_ERR(imx219->xvclk)) {
