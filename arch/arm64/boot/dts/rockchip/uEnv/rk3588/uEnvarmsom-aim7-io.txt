@@ -40,7 +40,16 @@ enable_uboot_overlays=1
 # Display
 #dtoverlay=/dtb/overlay/rk3588-armsom-aim7-display-800x1280-8hd-overlay.dtbo
 
-# CAM0
-#dtoverlay=/dtb/overlay/rk3588-armsom-aim7-camera-overlay.dtbo
+# CAM0 (J13, IMX219)
+#dtoverlay=/dtb/overlay/rk3588-armsom-aim7-camera-imx219-cs0-overlay.dtbo
+
+# CAM1 (J49, IMX219)
+#dtoverlay=/dtb/overlay/rk3588-armsom-aim7-camera-imx219-cs1-overlay.dtbo
+
+# CAM2 (J12, OV13850)
+#dtoverlay=/dtb/overlay/rk3588-armsom-aim7-camera-ov13850-cs2-overlay.dtbo
+
+# CAM3 (J24, OV13850)
+#dtoverlay=/dtb/overlay/rk3588-armsom-aim7-camera-ov13850-cs3-overlay.dtbo
 
 #overlay_end
