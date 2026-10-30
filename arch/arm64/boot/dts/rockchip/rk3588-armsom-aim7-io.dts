@@ -17,8 +17,6 @@
 #include "dt-bindings/usb/pd.h"
 #include "rk3588.dtsi"
 #include "rk3588-rk806-single.dtsi"
-//#include "rk3588-armsom-aim7-camera.dtsi"
-//#include "rk3588-armsom-aim7-display-8hd.dtsi"
 #include "rk3588-linux.dtsi"
 
 / {
@@ -144,7 +142,19 @@
 		vin-supply = <&vcc5v0_sys>;
 	};
 
-	vcc3v3_pcie30_clk: vcc3v3-pcie30 {
+	/* AIM-IO VDD_3V3_SYS: fixed carrier rail supplying the M.2 slot. */
+	vcc3v3_m2: regulator-m2-3v3 {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc3v3_m2";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-always-on;
+		regulator-boot-on;
+		vin-supply = <&vcc5v0_sys>;
+	};
+
+	/* Core-board 3.3V rail for the AU5426 and its oscillator. */
+	vcc3v3_pcie30_clk: regulator-pcie30-clk {
 		compatible = "regulator-fixed";
 		regulator-name = "vcc3v3_pcie30_clk";
 		regulator-min-microvolt = <3300000>;
@@ -152,7 +162,7 @@
 		regulator-always-on;
 		regulator-boot-on;
 		enable-active-high;
-		gpios = <&gpio2 RK_PC5 GPIO_ACTIVE_HIGH>;
+		gpio = <&gpio2 RK_PC5 GPIO_ACTIVE_HIGH>;
 		vin-supply = <&vcc5v0_sys>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&vcc3v3_pcie30_clk_en>;
@@ -681,12 +691,6 @@
 	status = "okay";
 };
 
-// &mdio1 {
-// 	rgmii_phy: phy@1 {
-// 		compatible = "ethernet-phy-ieee802.3-c22";
-// 		reg = <0x1>;
-// 	};
-// };
 
 &mipi_dcphy0 {
 	status = "okay";
@@ -728,55 +732,44 @@
 	};
 };
 
-// &combphy0_ps {
-// 	status = "okay";
-// };
-
 &combphy2_psu {
 	status = "okay";
 };
 
-// &pcie2x1l2 {
-//  	reset-gpios = <&gpio3 RK_PD1 GPIO_ACTIVE_HIGH>;
-//  	rockchip,init-delay-ms = <100>;
-//  	status = "okay";	
-//  };
-
-// &pcie2x1l0 {
-// 	phys = <&pcie30phy>;
-// 	vpcie3v3-supply = <&vcc3v3_pcie30>;
-// 	status = "okay";
-// };
-// &pcie2x1l1 {
-// 	phys = <&pcie30phy>;
-// 	vpcie3v3-supply = <&vcc3v3_pcie30>;
-// 	status = "okay";
-// };
-
 &pcie30phy {
- 	rockchip,pcie30-phymode = <PHY_MODE_PCIE_NABIBI>;
- 	status = "okay";
- };
+	rockchip,pcie30-phymode = <PHY_MODE_PCIE_NABIBI>;
+	status = "okay";
+};
 
-//  //表示lane2/3
-// &pcie3x2 {
-// 	num-lanes = <1>;
-// 	vpcie3v3-supply = <&vcc3v3_pcie30>;
-// 	status = "okay";
-// };
-//表示lane0/1
+/* M.2 Key E is wired to PCIe3 port 0, lane 0. */
 &pcie3x4 {
 	num-lanes = <1>;
+	/* This BSP driver drives 0 to assert PERST# and 1 to release it. */
 	reset-gpios = <&gpio0 RK_PD0 GPIO_ACTIVE_HIGH>;
+	vpcie3v3-supply = <&vcc3v3_m2>;
 	pinctrl-names = "default";
- 	pinctrl-0 = <&pcie30x4_clkreqn_m1>;
+	pinctrl-0 = <&pcie30x4_clkreqn_m0 &pcie30x4_reset>;
 	status = "okay";
 };
 
 &pinctrl {
-	pcie30x4 {
-		pcie30x4_clkreqn_m1: pcie30x4-clkreqn-m1 {
-			rockchip,pins = <0 RK_PC6 RK_FUNC_GPIO &pcfg_pull_down>;
+	pcie {
+		vcc3v3_pcie30_clk_en: vcc3v3-pcie30-clk-en {
+			rockchip,pins = <2 RK_PC5 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+
+		pcie30x4_reset: pcie30x4-reset {
+			rockchip,pins = <0 RK_PD0 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+
+		pcie30x4_clkreqn_m0: pcie30x4-clkreqn-m0 {
+			/*
+			 * CLKREQ# also drives Q8001 and the AU5426 clock-source
+			 * selector on AIM7. Keep it low for the 100 MHz oscillator;
+			 * a weak pull-down cannot guarantee this against the carrier
+			 * board pull-up. No supports-clkreq: use a continuous clock.
+			 */
+			rockchip,pins = <0 RK_PC6 RK_FUNC_GPIO &pcfg_output_low_pull_none>;
 		};
 	};
 	cam {
@@ -814,14 +807,6 @@
 			rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 	};
-	vcc3v3_pcie30_clk_en: vcc3v3-pcie30-clk-en {
-		rockchip,pins = <2 RK_PC5 RK_FUNC_GPIO &pcfg_pull_none>;
-	};
-	// sdio-pwrseq {
-	// 	wifi_enable_h: wifi-enable-h {
-	// 		rockchip,pins = <0 RK_PC4 RK_FUNC_GPIO &pcfg_pull_none>;
-	// 	};
-	// };
 
 	sdmmc {
 		sd_s0_pwr: sd-s0-pwr {
@@ -874,25 +859,10 @@
 	status = "disabled";
 };
 
-// &route_dsi0 {
-// 	status = "disabled";
-// 	connect = <&vp3_out_dsi0>;
-// };
-
-// &route_dsi1 {
-// 	status = "disabled";
-// 	connect = <&vp3_out_dsi1>;
-// };
 
 &route_hdmi0 {
 	status = "okay";
 };
-
-
-// &leds {
-// 	status = "okay";
-// };
-
 
 &sdhci {
 	bus-width = <8>;
@@ -904,22 +874,6 @@
 	status = "okay";
 };
 
-// &sdio {
-// 	max-frequency = <150000000>;
-// 	supports-sdio;
-// 	bus-width = <4>;
-// 	disable-wp;
-// 	cap-sd-highspeed;
-// 	cap-sdio-irq;
-// 	keep-power-in-suspend;
-// 	mmc-pwrseq = <&sdio_pwrseq>;
-// 	non-removable;
-// 	num-slots = <1>;
-// 	pinctrl-names = "default";
-// 	pinctrl-0 = <&sdiom0_pins>;
-// 	sd-uhs-sdr104;
-// 	status = "okay";
-// };
 
 &sdmmc {
 	max-frequency = <200000000>;
@@ -937,9 +891,6 @@
 	status = "okay";
 };
 
-// &uart1 {
-// 	status = "okay";
-// };
 
 &uart6 {
 	status = "disabled";
@@ -950,8 +901,6 @@
 &uart7 {
 	status = "okay";
 };
-
-
 
 &u2phy0 {
 	status = "okay";
