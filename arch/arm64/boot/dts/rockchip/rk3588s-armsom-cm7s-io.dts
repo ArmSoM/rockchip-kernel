@@ -269,8 +269,8 @@
 	usbc0: fusb302@22 {
 		compatible = "fcs,fusb302";
 		reg = <0x22>;
-		interrupt-parent = <&gpio4>;
-		interrupts = <RK_PA3 IRQ_TYPE_LEVEL_LOW>;
+		interrupt-parent = <&gpio0>;
+		interrupts = <RK_PD0 IRQ_TYPE_LEVEL_LOW>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&usbc0_int>;
 		vbus-supply = <&vbus5v0_typec>;
@@ -357,7 +357,8 @@
 &pinctrl {
 	usb-typec {
 		usbc0_int: usbc0-int {
-			rockchip,pins = <4 RK_PA3 RK_FUNC_GPIO &pcfg_pull_up>;
+			/* CN3 pin 89: USBCC_INT_L_1V8. */
+			rockchip,pins = <0 RK_PD0 RK_FUNC_GPIO &pcfg_pull_up>;
 		};
 
 		typec5v_pwren: typec5v-pwren {
@@ -417,7 +418,7 @@
 
 &usbdrd_dwc3_0 {
 	status = "okay";
-	dr_mode = "peripheral";
+	dr_mode = "otg";
 	phy_mode = "utmi_wide";
 	usb-role-switch;
 	port {
