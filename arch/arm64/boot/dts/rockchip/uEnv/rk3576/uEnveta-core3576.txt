@@ -1,0 +1,10 @@
+# ETA-CORE3576: kernel version is filled by the SDK packaging scripts.
+uname_r=
+size=0x1000000
+cmdline="earlyprintk console=ttyFIQ0 console=tty1 consoleblank=0 loglevel=7 rootwait rw rootfstype=ext4"
+
+enable_uboot_overlays=1
+#overlay_start
+# UART6/7/10, CAN0 and Type-C DP are configured in the base device tree.
+# Do not apply Sige5 display/camera overlays to this board.
+#overlay_end

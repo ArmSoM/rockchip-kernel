@@ -5,6 +5,11 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 board_info() {
 	if [[ "$2" == "rk3576" ]]; then
 		case $1 in
+			core3576)
+				BOARD_NAME='eta-core3576'
+				BOARD_DTB='rk3576-eta-core3576.dtb'
+				BOARD_uEnv='uEnveta-core3576.txt'
+				;;
 			armsom-sige5)
 				BOARD_NAME='armsom-sige5'
 				BOARD_DTB='rk3576-armsom-sige5.dtb'

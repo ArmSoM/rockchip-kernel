@@ -517,6 +517,14 @@ struct rtl8365mb_chip_info {
 #define PHY_INTF(_mode) (RTL8365MB_PHY_INTERFACE_MODE_ ## _mode)
 static const struct rtl8365mb_chip_info rtl8365mb_chip_infos[] = {
 	{
+		.name = "RTL8363NB-VB",
+		.chip_id = 0x6511,
+		.chip_ver = 0x0060,
+		.extints = {
+			{ 6, 1, PHY_INTF(RGMII) },
+		},
+	},
+	{
 		.name = "RTL8365MB-VC",
 		.chip_id = 0x6367,
 		.chip_ver = 0x0040,
@@ -681,6 +689,26 @@ static int rtl8365mb_phy_ocp_prepare(struct realtek_priv *priv, int phy,
 	return 0;
 }
 
+static int rtl8363nb_phy_ocp(struct realtek_priv *priv, int phy,
+			    u32 ocp_addr, u16 *data, bool write)
+{
+	u32 addr, val;
+	int ret;
+
+	addr = 0x2000 | (((ocp_addr >> 6) & 0xf) << 8) |
+	       (phy << 5) | ((ocp_addr >> 1) & 0x1f);
+	ret = regmap_update_bits(priv->map_nolock, 0x1d15, 0x0fc0,
+				((ocp_addr >> 10) & 0x3f) << 6);
+	if (ret)
+		return ret;
+	if (write)
+		return regmap_write(priv->map_nolock, addr, *data);
+	ret = regmap_read(priv->map_nolock, addr, &val);
+	if (!ret)
+		*data = val;
+	return ret;
+}
+
 static int rtl8365mb_phy_ocp_read(struct realtek_priv *priv, int phy,
 				  u32 ocp_addr, u16 *data)
 {
@@ -688,6 +716,11 @@ static int rtl8365mb_phy_ocp_read(struct realtek_priv *priv, int phy,
 	int ret;
 
 	mutex_lock(&priv->map_lock);
+
+	if (((struct rtl8365mb *)priv->chip_data)->chip_info->chip_id == 0x6511) {
+		ret = rtl8363nb_phy_ocp(priv, phy, ocp_addr, data, false);
+		goto out;
+	}
 
 	ret = rtl8365mb_phy_poll_busy(priv);
 	if (ret)
@@ -733,6 +766,11 @@ static int rtl8365mb_phy_ocp_write(struct realtek_priv *priv, int phy,
 
 	mutex_lock(&priv->map_lock);
 
+	if (((struct rtl8365mb *)priv->chip_data)->chip_info->chip_id == 0x6511) {
+		ret = rtl8363nb_phy_ocp(priv, phy, ocp_addr, &data, true);
+		goto out;
+	}
+
 	ret = rtl8365mb_phy_poll_busy(priv);
 	if (ret)
 		goto out;
@@ -764,7 +802,7 @@ static int rtl8365mb_phy_ocp_write(struct realtek_priv *priv, int phy,
 out:
 	mutex_unlock(&priv->map_lock);
 
-	return 0;
+	return ret;
 }
 
 static int rtl8365mb_phy_read(struct realtek_priv *priv, int phy, int regnum)
@@ -1020,6 +1058,20 @@ static int rtl8365mb_ext_config_forcemode(struct realtek_priv *priv, int port,
 	if (ret)
 		return ret;
 
+	/* RTL8363NB-VB has a second force-ability gate on extension 1. */
+	if (((struct rtl8365mb *)priv->chip_data)->chip_info->chip_id == 0x6511) {
+		if (link) {
+			ret = regmap_update_bits(priv->map,
+				RTL8365MB_DIGITAL_INTERFACE_FORCE_REG(extint->id), BIT(4), 0);
+			if (ret)
+				return ret;
+			ret = regmap_update_bits(priv->map,
+				RTL8365MB_DIGITAL_INTERFACE_FORCE_REG(extint->id), BIT(4), BIT(4));
+			if (ret)
+				return ret;
+		}
+		return regmap_update_bits(priv->map, 0x137c, BIT(12), 0);
+	}
 	return 0;
 }
 
@@ -1862,6 +1914,56 @@ static int rtl8365mb_change_tag_protocol(struct dsa_switch *ds,
 	return rtl8365mb_cpu_config(priv);
 }
 
+/* RTL8363NB-VB: two copper PHYs (1, 3), with RGMII on extension 1.
+ * Keep normal DSA isolation and report real MDIO/link errors.
+ */
+static int rtl8363nb_init(struct realtek_priv *priv)
+{
+	static const struct { u16 reg, mask, value; } cfg[] = {
+		{ 0x0038, 0x0300, 0x0300 },
+		{ 0x0078, 0x0300, 0x0300 },
+		{ 0x00d8, 0x0300, 0x0000 },
+		{ 0x00f8, 0x0300, 0x0000 },
+		{ 0x1303, 0x0251, 0x0250 },
+		{ 0x1304, 0x7700, 0x4700 },
+		{ 0x1b33, 0xffff, 0 },
+		{ 0x1b24, 0xffff, 0 },
+		{ 0x1b25, 0xffff, 0 },
+		{ 0x13f9, 0x0700, 0x0400 },
+		{ 0x1d3d, BIT(10), 0 },
+		{ 0x03f7, BIT(1), 0 },
+		{ 0x1d11, BIT(11) | BIT(6), 0 },
+		{ 0x1d41, BIT(5) | BIT(7), 0 },
+		{ 0x13f9, 0x0038, 0x0000 },
+	};
+	int i, phy, ret;
+
+	for (i = 0; i < ARRAY_SIZE(cfg); i++) {
+		ret = regmap_update_bits(priv->map, cfg[i].reg,
+					 cfg[i].mask, cfg[i].value);
+		if (ret)
+			return ret;
+	}
+	for (phy = 1; phy <= 3; phy += 2) {
+		ret = rtl8365mb_phy_ocp_write(priv, phy, 0xa5d0, 6);
+		if (ret)
+			return ret;
+		ret = rtl8365mb_phy_ocp_write(priv, phy, 0xa436, 0x8016);
+		if (ret)
+			return ret;
+		ret = rtl8365mb_phy_ocp_write(priv, phy, 0xa438, 0x0b00);
+		if (ret)
+			return ret;
+		ret = rtl8365mb_phy_ocp_write(priv, phy, 0xa436, 0x83a7);
+		if (ret)
+			return ret;
+		ret = rtl8365mb_phy_ocp_write(priv, phy, 0xa438, 0x160c);
+		if (ret)
+			return ret;
+	}
+	return 0;
+}
+
 static int rtl8365mb_switch_init(struct realtek_priv *priv)
 {
 	struct rtl8365mb *mb = priv->chip_data;
@@ -1870,6 +1972,12 @@ static int rtl8365mb_switch_init(struct realtek_priv *priv)
 	int i;
 
 	ci = mb->chip_info;
+
+	if (ci->chip_id == 0x6511) {
+		ret = rtl8363nb_init(priv);
+		if (ret)
+			return ret;
+	}
 
 	/* Do any chip-specific init jam before getting to the common stuff */
 	if (ci->jam_table) {
@@ -2033,6 +2141,7 @@ static int rtl8365mb_get_chip_id_and_ver(struct regmap *map, u32 *id, u32 *ver)
 	ret = regmap_read(map, RTL8365MB_CHIP_VER_REG, ver);
 	if (ret)
 		return ret;
+
 
 	/* Reset magic register */
 	ret = regmap_write(map, RTL8365MB_MAGIC_REG, 0);
