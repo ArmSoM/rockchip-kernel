@@ -11,12 +11,14 @@
 #include "rk3576-evb.dtsi"
 #include "rk3576-rk806.dtsi"
 #include "rk3576-linux.dtsi"
-// #include "rk3576-armsom-cm5-display.dtsi"
-// #include "rk3576-armsom-cm5-camera.dtsi"
 
 / {
 	model = "ArmSom RK3576 AIM5 Board";
 	compatible = "rockchip,rk3576-armsom-aim5-io", "rockchip,rk3576";
+
+	wireless_bluetooth: wireless-bluetooth {
+		status = "disabled";
+	};
 
 	pdmics: dummy-codec {
 		status = "disabled";
@@ -309,29 +311,24 @@
 };
 
 &pinctrl {
-	cam {
-		mipicsi0_pwr: mipicsi0-pwr {
-			rockchip,pins =
-				/* camera power en */
-				<3 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
-		};
-
-		mipicsi1_pwr: mipicsi1-pwr {
-			rockchip,pins =
-				/* camera power en */
-				<3 RK_PC5 RK_FUNC_GPIO &pcfg_pull_none>;
-		};
-
-		mipidcphy0_pwr: mipidcphy0-pwr {
-			rockchip,pins =
-				/* camera power en */
-				<3 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
+	hym8563 {
+		hym8563_int: hym8563-int {
+			rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>;
 		};
 	};
 
 	headphone {
 		hp_det: hp-det {
 			rockchip,pins = <0 RK_PD3 RK_FUNC_GPIO &pcfg_pull_up>;
+		};
+	};
+
+	sdmmc0 {
+		/omit-if-no-ref/
+		sdmmc0_det: sdmmc0-det {
+			rockchip,pins =
+				/* sdmmc0_detn */
+				<2 RK_PD4 1 &pcfg_pull_up>;
 		};
 	};
 
@@ -372,12 +369,32 @@
 
 	wireless-wlan {
 		wifi_host_wake_irq: wifi-host-wake-irq {
-			rockchip,pins = <0 RK_PB0 RK_FUNC_GPIO &pcfg_pull_down>;
+			rockchip,pins = <0 RK_PD0 RK_FUNC_GPIO &pcfg_pull_down>;
 		};
 
 		wifi_poweren_gpio: wifi-poweren-gpio {
 			rockchip,pins = <1 RK_PC6 RK_FUNC_GPIO &pcfg_pull_up>;
 		};
+	};
+};
+
+&i2c2 {
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&i2c2m0_xfer>;
+    #address-cells = <1>;
+    #size-cells = <0>;
+
+	hym8563: hym8563@51 {
+		compatible = "haoyu,hym8563";
+		reg = <0x51>;
+		#clock-cells = <0>;
+		clock-frequency = <32768>;
+		clock-output-names = "hym8563";
+		pinctrl-names = "default";
+		pinctrl-0 = <&hym8563_int>;
+		interrupt-parent = <&gpio0>;
+		interrupts = <RK_PA5 IRQ_TYPE_LEVEL_LOW>;
 	};
 };
 
@@ -412,7 +429,35 @@
 	status = "disabled";
 };
 
+// &sdmmc {
+// 	max-frequency = <200000000>;
+// 	no-sdio;
+// 	no-mmc;
+// 	bus-width = <4>;
+// 	cap-mmc-highspeed;
+// 	cap-sd-highspeed;
+// 	disable-wp;
+// 	sd-uhs-sdr104;
+// 	rockchip,default-sample-phase = <90>;
+// 	cd-gpios = <&gpio2 RK_PD4 GPIO_ACTIVE_LOW>;
+// 	vmmc-supply = <&vcc_3v3_s3>;
+// 	vqmmc-supply = <&vccio_sd_s0>;
+// 	pinctrl-names = "default";
+// 	pinctrl-0 = <&sdmmc0_clk &sdmmc0_cmd &sdmmc0_det &sdmmc0_bus4>;
+// 	status = "okay";
+// };
+
 &sdmmc {
+	max-frequency = <200000000>;
+	no-sdio;
+	no-mmc;
+	bus-width = <4>;
+	cap-mmc-highspeed;
+	cap-sd-highspeed;
+	disable-wp;
+	sd-uhs-sdr104;
+	cd-gpios = <&gpio2 RK_PD4 GPIO_ACTIVE_LOW>;
+	vqmmc-supply = <&vccio_sd_s0>;
 	status = "okay";
 };
 
@@ -443,11 +488,12 @@
 
 &usbdp_phy_u3 {
 	//maximum-speed = "high-speed";
-	status = "disabled";
+	status = "okay";
 };
 
 &usb_drd0_dwc3 {
-	status = "disabled";
+	status = "okay";
+	dr_mode = "peripheral";
 };
 
 &usb_drd1_dwc3 {
