@@ -314,6 +314,7 @@
 	fixed-link {
 		speed = <1000>;
 		full-duplex;
+		pause;
 	};
 };
 
@@ -827,16 +828,33 @@
 		compatible = "realtek,rtl8365mb";
 		reg = <0x1d>;
 		reset-gpios = <&gpio3 RK_PA3 GPIO_ACTIVE_LOW>;
+
+		mdio {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			/* J9 exposes two pairs through U7006 (schematic page 18). */
+			u21_phy1: ethernet-phy@1 {
+				reg = <1>;
+				max-speed = <100>;
+			};
+
+			u21_phy3: ethernet-phy@3 {
+				reg = <3>;
+			};
+		};
 		ports {
 			#address-cells = <1>;
 			#size-cells = <0>;
 			port@3 {
 				reg = <3>;
 				label = "lan3";
+				phy-handle = <&u21_phy3>;
 			};
 			port@1 {
 				reg = <1>;
 				label = "lan4";
+				phy-handle = <&u21_phy1>;
 			};
 			port@6 {
 				reg = <6>;
@@ -845,6 +863,7 @@
 				fixed-link {
 					speed = <1000>;
 					full-duplex;
+					pause;
 				};
 			};
 		};
