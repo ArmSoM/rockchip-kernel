@@ -294,6 +294,7 @@
 	fixed-link {
 		speed = <1000>;
 		full-duplex;
+		pause;
 	};
 };
 
@@ -798,16 +799,34 @@
 		compatible = "realtek,rtl8365mb";
 		reg = <0x1d>;
 		reset-gpios = <&gpio2 RK_PB5 GPIO_ACTIVE_LOW>;
+
+		/* Both U20 connectors expose only two twisted pairs. */
+		mdio {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			u20_phy1: ethernet-phy@1 {
+				reg = <1>;
+				max-speed = <100>;
+			};
+
+			u20_phy3: ethernet-phy@3 {
+				reg = <3>;
+				max-speed = <100>;
+			};
+		};
 		ports {
 			#address-cells = <1>;
 			#size-cells = <0>;
 			port@1 {
 				reg = <1>;
 				label = "lan1";
+				phy-handle = <&u20_phy1>;
 			};
 			port@3 {
 				reg = <3>;
 				label = "lan2";
+				phy-handle = <&u20_phy3>;
 			};
 			port@6 {
 				reg = <6>;
@@ -816,6 +835,7 @@
 				fixed-link {
 					speed = <1000>;
 					full-duplex;
+					pause;
 				};
 			};
 		};
