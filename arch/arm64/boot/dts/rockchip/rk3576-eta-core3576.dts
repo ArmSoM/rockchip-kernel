@@ -2,7 +2,7 @@
 /*
  * Copyright (c) 2024 Rockchip Electronics Co., Ltd.
  *
- * ETA-CORE3576 V1.0 schematic adaptation of rk3576-armsom-sige5.dts.
+ * ETA-CORE3576 V1.0 board support.
  * Kernel build and BCM43752 Wi-Fi connectivity verified on hardware.
  * Ethernet awaits correction of the board RGMII TX/RX wiring.
  * See Documentation/arm64/eta-core3576-bringup.rst for validation status.
@@ -217,7 +217,7 @@
 		pinctrl-0 = <&usb_otg0_pwren>;
 	};
 
-	/* BW3752-50B1: select the matching BT driver/firmware after chip ID check. */
+	/* BW3752-50B1 Bluetooth: UART4 M1 with power and wake controls. */
 	wireless_bluetooth: wireless-bluetooth {
 		compatible = "bluetooth-platdata";
 		uart_rts_gpios = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
@@ -227,10 +227,10 @@
 		BT,power_gpio = <&gpio1 RK_PC7 GPIO_ACTIVE_HIGH>;
 		BT,wake_gpio = <&gpio1 RK_PD4 GPIO_ACTIVE_HIGH>;
 		BT,wake_host_irq = <&gpio0 RK_PB1 GPIO_ACTIVE_HIGH>;
-		status = "disabled";
+		status = "okay";
 	};
 
-	/* Do not identify BW3752-50B1 as Sige5's AP6275S. SDIO enumeration is enabled. */
+	/* BW3752-50B1 Wi-Fi: SDIO enumeration with the BCM43752 firmware profile. */
 	wireless_wlan: wireless-wlan {
 		compatible = "wlan-platdata";
 		/* SDIO 02d0:aae8: use the SDK BCM43752 firmware profile. */
