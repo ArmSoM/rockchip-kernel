@@ -5,5 +5,11 @@ cmdline="earlyprintk console=ttyFIQ0 console=tty1 consoleblank=0 loglevel=7 root
 enable_uboot_overlays=1
 #overlay_start
 
+# CON3100: I2C0/I2C1 and UART0 debug console are enabled in the base DT.
+# Optional header functions; enable SPI0 or I2S1, never both.
+#dtoverlay=/dtb/overlay/rk3528-armsom-sige1-spi0-overlay.dtbo
+#dtoverlay=/dtb/overlay/rk3528-armsom-sige1-i2s1-overlay.dtbo
+#dtoverlay=/dtb/overlay/rk3528-armsom-sige1-pwm4-overlay.dtbo
+#dtoverlay=/dtb/overlay/rk3528-armsom-sige1-pwm5-overlay.dtbo
 
 #overlay_end

@@ -1,0 +1,28 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/dts-v1/;
+/plugin/;
+
+/* CON3100: MOSI 19, MISO 21, SCLK 23, CS0 24, CS1 26.
+ * GPIO4_B4 is also I2S1 SDI0; use SPI or I2S, not both.
+ */
+&sai1 { status = "disabled"; };
+&sige1_i2s1_sound { status = "disabled"; };
+&sige1_i2s1_codec { status = "disabled"; };
+
+&spi0 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&spi0_pins &spi0_csn0 &spi0_csn1>;
+	status = "okay";
+	spidev@0 {
+		compatible = "rockchip,spidev";
+		reg = <0>;
+		spi-max-frequency = <10000000>;
+	};
+	spidev@1 {
+		compatible = "rockchip,spidev";
+		reg = <1>;
+		spi-max-frequency = <10000000>;
+	};
+};

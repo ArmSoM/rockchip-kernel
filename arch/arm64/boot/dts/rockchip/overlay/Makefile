@@ -1,6 +1,12 @@
 # SPDX-License-Identifier: GPL-2.0
 ifeq ($(CONFIG_ARCH_ROCKCHIP), y)
 
+dtbo-$(CONFIG_CPU_RK3528) += \
+	rk3528-armsom-sige1-spi0-overlay.dtbo \
+	rk3528-armsom-sige1-i2s1-overlay.dtbo \
+	rk3528-armsom-sige1-pwm4-overlay.dtbo \
+	rk3528-armsom-sige1-pwm5-overlay.dtbo
+
 dtbo-$(CONFIG_CPU_RK3576) += \
 	rk3576-armsom-can0-m2-overlay.dtbo \
 	rk3576-armsom-can1-m1-overlay.dtbo \

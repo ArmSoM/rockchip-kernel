@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/dts-v1/;
+/plugin/;
+
+/* CON3100: SCLK 12, LRCK 35, SDO0 40, SDI0 23.
+ * SDI0 on pin 38 requires R3116 (NC in V1.2) to be fitted.
+ * No MCLK pin: GPIO4_A4 is the onboard RTL8125 PCIe reset.
+ * For external I2S devices clocked from BCLK/LRCK; SPI0 is mutually exclusive.
+ */
+&spi0 { status = "disabled"; };
+&sai1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2s1_sclk &i2s1_lrck &i2s1_sdi0 &i2s1_sdo0>;
+	status = "okay";
+};
+&sige1_i2s1_codec { status = "okay"; };
+&sige1_i2s1_sound { status = "okay"; };
