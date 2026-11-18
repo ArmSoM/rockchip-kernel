@@ -415,6 +415,8 @@
 };
 
 &hdmi {
+	/* Keep the U-Boot logo RGB when the sink is detected as DVI. */
+	force_output_bus_format_RGB;
 	status = "okay";
 };
 
