@@ -21,6 +21,7 @@
 			ov13850_1: ov13850_1@10 {
                 status = "okay";
                 compatible = "ovti,ov13850";
+                label = "CSI1";
                 reg = <0x10>;
                 clocks = <&cru CLK_MIPI_CAMARAOUT_M2>;
                 clock-names = "xvclk";

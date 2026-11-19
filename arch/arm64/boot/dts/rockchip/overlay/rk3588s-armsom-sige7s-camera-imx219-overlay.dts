@@ -34,6 +34,7 @@
 			pinctrl-0 = <&i2c8m2_xfer>;
 			imx219: imx219@10 {
 				compatible = "sony,imx219";
+				label = "MIPI-CSI";
 				status = "okay";
 				reg = <0x10>;
 				#address-cells = <1>;
