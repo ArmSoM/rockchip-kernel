@@ -7,10 +7,17 @@
 #include <dt-bindings/pinctrl/rockchip.h>
 
 / {
+	metadata {
+		title = "armsom-camera-m1 (ov13850-cs1)";
+		category = "camera";
+		compatible = "rockchip,rk3576-armsom-cm5-io";
+		exclusive = "camera-j12", "i2c5", "GPIO3_C1", "GPIO3_C4", "GPIO3_B0", "GPIO2_B5", "GPIO4_A0";
+	};
+
 	fragment@0 {
 		target-path = "/";
 		__overlay__ {
-			camera1_pwdn_gpio: camera-pwdn-gpio {
+			camera1_pwdn_gpio: camera1-pwdn-gpio {
 				status = "okay";
 				compatible = "regulator-fixed";
 				regulator-name = "camera1_pwdn_gpio";

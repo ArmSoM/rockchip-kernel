@@ -6,6 +6,13 @@
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/pinctrl/rockchip.h>
 / {
+	metadata {
+		title = "raspberrypi-camera-v2 (imx219-cs0)";
+		category = "camera";
+		compatible = "rockchip,rk3576-armsom-cm5-io";
+		exclusive = "camera-j25", "i2c4", "GPIO3_B7", "GPIO3_C0", "GPIO3_D4", "GPIO2_D7";
+	};
+
 	fragment@0 {
 		target-path = "/";
 		__overlay__ {

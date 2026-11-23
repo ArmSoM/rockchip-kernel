@@ -2,6 +2,13 @@
 /plugin/;
 
 / {
+	metadata {
+		title = "i2c4-m3";
+		category = "misc";
+		compatible = "rockchip,rk3576-armsom-aim5-io", "armsom,rk3588-armsom-cm5-cm4-nano-b-io", "rockchip,rk3576-armsom-cm5-io", "rockchip,rk3588-armsom-sige5";
+		exclusive = "i2c4", "GPIO3_B7", "GPIO3_C0";
+	};
+
 	fragment@0 {
 		target = <&i2c4>;
 

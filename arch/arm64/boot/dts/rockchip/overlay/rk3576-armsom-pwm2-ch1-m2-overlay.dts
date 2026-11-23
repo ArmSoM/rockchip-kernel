@@ -1,0 +1,21 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/dts-v1/;
+/plugin/;
+
+/ {
+    metadata {
+        title = "pwm2-ch1-m2";
+        category = "misc";
+        compatible = "armsom,rk3588-armsom-cm5-cm4-nano-b-io", "rockchip,rk3576-armsom-cm5-io";
+        exclusive = "pwm2-ch1", "GPIO2_D1";
+    };
+
+    fragment@0 {
+        target = <&pwm2_8ch_1>;
+        __overlay__ {
+            status = "okay";
+            pinctrl-names = "default";
+            pinctrl-0 = <&pwm2m2_ch1>;
+        };
+    };
+};

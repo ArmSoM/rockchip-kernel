@@ -7,6 +7,13 @@
 #include <dt-bindings/interrupt-controller/irq.h>
 
 / {
+    metadata {
+        title = "dp-disabled";
+        category = "display";
+        compatible = "rockchip,rk3576-armsom-cm5-io", "rockchip,rk3588-armsom-sige5";
+        exclusive = "dp";
+    };
+
     fragment@0 {
         target = <&dp>;
 
@@ -47,13 +54,7 @@
         };
     };
 
-    fragment@5 {
-        target = <&vp1>;
-
-        __overlay__ {
-            status = "disabled";
-        };
-    };
+    /* Leave shared VOP ports available to HDMI/DSI routes. */
 
     fragment@6 {
         target = <&route_dp0>;

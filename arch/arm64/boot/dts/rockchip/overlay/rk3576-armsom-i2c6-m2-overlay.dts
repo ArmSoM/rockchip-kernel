@@ -2,6 +2,13 @@
 /plugin/;
 
 / {
+	metadata {
+		title = "i2c6-m2";
+		category = "misc";
+		compatible = "armsom,rk3588-armsom-cm5-cm4-nano-b-io", "rockchip,rk3576-armsom-cm5-io";
+		exclusive = "i2c6", "GPIO2_D0", "GPIO2_D1";
+	};
+
 	fragment@0 {
 		target = <&i2c6>;
 

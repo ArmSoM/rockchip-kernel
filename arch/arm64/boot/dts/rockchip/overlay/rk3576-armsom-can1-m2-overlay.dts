@@ -1,9 +1,16 @@
 /dts-v1/;
 /plugin/;
 
-#include <dt-bindings/clock/rk3588-cru.h>
+#include <dt-bindings/clock/rockchip,rk3576-cru.h>
 
 / {
+	metadata {
+		title = "can1-m2";
+		category = "misc";
+		compatible = "rockchip,rk3576-armsom-cm5-io";
+		exclusive = "can1", "GPIO4_B4", "GPIO4_B5";
+	};
+
 	fragment@0 {
 		target = <&can1>;
 

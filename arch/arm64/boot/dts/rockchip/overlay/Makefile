@@ -23,12 +23,15 @@ dtbo-$(CONFIG_CPU_RK3576) += \
 	rk3576-armsom-i2c7-m2-overlay.dtbo \
 	rk3576-armsom-i2c8-m2-overlay.dtbo \
 	rk3576-armsom-i2c9-m1-overlay.dtbo \
+	rk3576-armsom-pwm0-ch0-m0-overlay.dtbo \
 	rk3576-armsom-pwm0-ch0-m1-overlay.dtbo \
 	rk3576-armsom-pwm0-ch0-m3-overlay.dtbo \
 	rk3576-armsom-pwm0-ch1-m0-overlay.dtbo \
 	rk3576-armsom-pwm1-ch0-m1-overlay.dtbo \
 	rk3576-armsom-pwm1-ch0-m3-overlay.dtbo \
 	rk3576-armsom-pwm1-ch1-m1-overlay.dtbo \
+	rk3576-armsom-pwm2-ch0-m2-overlay.dtbo \
+	rk3576-armsom-pwm2-ch1-m2-overlay.dtbo \
 	rk3576-armsom-pwm2-ch2-m1-overlay.dtbo \
 	rk3576-armsom-pwm2-ch3-m3-overlay.dtbo \
 	rk3576-armsom-pwm2-ch5-m1-overlay.dtbo \

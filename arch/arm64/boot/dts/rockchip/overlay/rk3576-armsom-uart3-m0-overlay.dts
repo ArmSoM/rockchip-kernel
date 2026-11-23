@@ -2,6 +2,13 @@
 /plugin/;
 
 / {
+	metadata {
+		title = "uart3-m0";
+		category = "misc";
+		compatible = "armsom,rk3588-armsom-cm5-cm4-nano-b-io", "rockchip,rk3576-armsom-cm5-io";
+		exclusive = "uart3", "GPIO3_A0", "GPIO3_A1";
+	};
+
 	fragment@0 {
 		target = <&uart3>;
 

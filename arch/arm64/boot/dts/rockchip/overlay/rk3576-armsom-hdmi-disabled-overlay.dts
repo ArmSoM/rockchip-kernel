@@ -7,6 +7,13 @@
 #include <dt-bindings/interrupt-controller/irq.h>
 
 / {
+    metadata {
+        title = "hdmi-disabled";
+        category = "display";
+        compatible = "rockchip,rk3576-armsom-cm5-io", "rockchip,rk3588-armsom-sige5";
+        exclusive = "hdmi";
+    };
+
     fragment@0 {
         target = <&hdmi>;
 
