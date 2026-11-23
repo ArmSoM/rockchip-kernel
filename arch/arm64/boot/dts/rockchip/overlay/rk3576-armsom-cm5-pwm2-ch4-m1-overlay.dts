@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/dts-v1/;
+/plugin/;
+
+
+/ {
+	metadata {
+		title = "pwm2-ch4-m1";
+		category = "misc";
+		compatible = "rockchip,rk3576-armsom-cm5-custom-io";
+		exclusive = "pwm2-ch4", "GPIO4_A3";
+		description = "CUSTOM CARRIER ONLY. CN1-26 (3.3 V). Replaces SAI1 SCLK. The official audio codec must not be connected to this signal.";
+	};
+
+	fragment@0 {
+		target = <&pwm2_8ch_4>;
+		__overlay__ {
+			status = "okay";
+			pinctrl-names = "active";
+			pinctrl-0 = <&pwm2m1_ch4>;
+		};
+	};
+};

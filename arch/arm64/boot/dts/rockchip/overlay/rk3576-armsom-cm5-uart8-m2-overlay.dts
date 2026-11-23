@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/dts-v1/;
+/plugin/;
+
+
+/ {
+	metadata {
+		title = "uart8-m2";
+		category = "misc";
+		compatible = "rockchip,rk3576-armsom-cm5-custom-io";
+		exclusive = "uart8", "GPIO0_C1", "GPIO0_C2";
+		description = "CUSTOM CARRIER ONLY. CN1-44=TX, CN1-46=RX (3.3 V). Replaces I2C0, including the official codec, Type-C controller and touch bus. No hardware flow control.";
+	};
+
+	fragment@0 {
+		target = <&uart8>;
+		__overlay__ {
+			status = "okay";
+			pinctrl-names = "default";
+			pinctrl-0 = <&uart8m2_xfer>;
+		};
+	};
+};

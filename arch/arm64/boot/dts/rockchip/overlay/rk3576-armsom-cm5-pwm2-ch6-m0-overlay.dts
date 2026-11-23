@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/dts-v1/;
+/plugin/;
+
+
+/ {
+	metadata {
+		title = "pwm2-ch6-m0";
+		category = "misc";
+		compatible = "rockchip,rk3576-armsom-cm5-custom-io";
+		exclusive = "pwm2-ch6", "GPIO4_A7";
+		description = "CUSTOM CARRIER ONLY. CN1-34 (3.3 V). Replaces SAI1 SDO0 and uses the same PWM channel as the official fan, on a different pin. The template disables the fan consumer.";
+	};
+
+	fragment@0 {
+		target = <&pwm2_8ch_6>;
+		__overlay__ {
+			status = "okay";
+			pinctrl-names = "active";
+			pinctrl-0 = <&pwm2m0_ch6>;
+		};
+	};
+};

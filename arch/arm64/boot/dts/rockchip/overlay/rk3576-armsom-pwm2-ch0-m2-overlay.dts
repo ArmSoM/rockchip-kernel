@@ -6,7 +6,7 @@
     metadata {
         title = "pwm2-ch0-m2";
         category = "misc";
-        compatible = "armsom,rk3588-armsom-cm5-cm4-nano-b-io", "rockchip,rk3576-armsom-cm5-io";
+        compatible = "armsom,rk3588-armsom-cm5-cm4-nano-b-io", "rockchip,rk3576-armsom-cm5-io", "rockchip,rk3576-armsom-cm5-custom-io";
         exclusive = "pwm2-ch0", "GPIO2_D0";
     };
 

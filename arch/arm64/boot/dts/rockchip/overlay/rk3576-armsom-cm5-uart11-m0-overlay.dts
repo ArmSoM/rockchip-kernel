@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/dts-v1/;
+/plugin/;
+
+
+/ {
+	metadata {
+		title = "uart11-m0";
+		category = "misc";
+		compatible = "rockchip,rk3576-armsom-cm5-io", "rockchip,rk3576-armsom-cm5-custom-io";
+		exclusive = "uart11", "GPIO3_C4", "GPIO3_C1";
+		description = "CN1-80=TX, CN1-82=RX (3.3 V after the module level translator). Disconnect the J12 camera. No hardware flow control. Validate the baud rate and signal quality on the actual carrier.";
+	};
+
+	fragment@0 {
+		target = <&uart11>;
+		__overlay__ {
+			status = "okay";
+			pinctrl-names = "default";
+			pinctrl-0 = <&uart11m0_xfer>;
+		};
+	};
+};

@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/dts-v1/;
+/plugin/;
+
+
+/ {
+	metadata {
+		title = "uart7-m0";
+		category = "misc";
+		compatible = "rockchip,rk3576-armsom-cm5-custom-io";
+		exclusive = "uart7", "GPIO2_B6", "GPIO2_B7";
+		description = "CUSTOM CARRIER ONLY. CN1-45=TX, CN1-47=RX (3.3 V). The official carrier uses these nets for USB VBUS control and headphone detection. No hardware flow control.";
+	};
+
+	fragment@0 {
+		target = <&uart7>;
+		__overlay__ {
+			status = "okay";
+			pinctrl-names = "default";
+			pinctrl-0 = <&uart7m0_xfer>;
+		};
+	};
+};

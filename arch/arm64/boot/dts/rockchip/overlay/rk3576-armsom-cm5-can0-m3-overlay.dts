@@ -1,0 +1,26 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/clock/rockchip,rk3576-cru.h>
+
+/ {
+	metadata {
+		title = "can0-m3";
+		category = "misc";
+		compatible = "rockchip,rk3576-armsom-cm5-io", "rockchip,rk3576-armsom-cm5-custom-io";
+		exclusive = "can0", "GPIO3_C4", "GPIO3_C1";
+		description = "CN1-80=TX, CN1-82=RX (3.3 V after the module level translator). Disconnect the J12 camera. An external CAN transceiver and termination are required. Validate bus timing on the actual carrier.";
+	};
+
+	fragment@0 {
+		target = <&can0>;
+		__overlay__ {
+			status = "okay";
+			assigned-clocks = <&cru CLK_CAN0>;
+			assigned-clock-rates = <100000000>;
+			pinctrl-names = "default";
+			pinctrl-0 = <&can0m3_pins>;
+		};
+	};
+};

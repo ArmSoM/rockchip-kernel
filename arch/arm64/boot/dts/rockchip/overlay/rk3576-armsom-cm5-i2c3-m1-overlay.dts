@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/dts-v1/;
+/plugin/;
+
+
+/ {
+	metadata {
+		title = "i2c3-m1";
+		category = "misc";
+		compatible = "rockchip,rk3576-armsom-cm5-io", "rockchip,rk3576-armsom-cm5-custom-io";
+		exclusive = "i2c3", "GPIO0_C6", "GPIO0_C7";
+		description = "CN1-37=SCL, CN1-39=SDA (3.3 V). Reuses LCD power/reset. Disconnect the display; mutually exclusive with the DSI panel and i2c3-m0. External I2C pull-ups are required.";
+	};
+
+	fragment@0 {
+		target = <&i2c3>;
+		__overlay__ {
+			status = "okay";
+			pinctrl-names = "default";
+			pinctrl-0 = <&i2c3m1_xfer>;
+		};
+	};
+};

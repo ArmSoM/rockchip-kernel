@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/dts-v1/;
+/plugin/;
+
+
+/ {
+	metadata {
+		title = "pwm2-ch5-m0";
+		category = "misc";
+		compatible = "rockchip,rk3576-armsom-cm5-custom-io";
+		exclusive = "pwm2-ch5", "GPIO4_A2";
+		description = "CUSTOM CARRIER ONLY. CN1-24 (3.3 V). Replaces the audio codec MCLK.";
+	};
+
+	fragment@0 {
+		target = <&pwm2_8ch_5>;
+		__overlay__ {
+			status = "okay";
+			pinctrl-names = "active";
+			pinctrl-0 = <&pwm2m0_ch5>;
+		};
+	};
+};

@@ -8,6 +8,21 @@ dtbo-$(CONFIG_CPU_RK3528) += \
 	rk3528-armsom-sige1-pwm5-overlay.dtbo
 
 dtbo-$(CONFIG_CPU_RK3576) += \
+	rk3576-armsom-cm5-i2c3-m1-overlay.dtbo \
+	rk3576-armsom-cm5-uart10-m2-overlay.dtbo \
+	rk3576-armsom-cm5-pwm1-ch1-m0-overlay.dtbo \
+	rk3576-armsom-cm5-i2c5-m3-overlay.dtbo \
+	rk3576-armsom-cm5-uart11-m0-overlay.dtbo \
+	rk3576-armsom-cm5-can0-m3-overlay.dtbo \
+	rk3576-armsom-cm5-pwm0-ch0-m3-overlay.dtbo \
+	rk3576-armsom-cm5-pwm2-ch7-m2-overlay.dtbo \
+	rk3576-armsom-cm5-uart7-m0-overlay.dtbo \
+	rk3576-armsom-cm5-i2c8-m2-overlay.dtbo \
+	rk3576-armsom-cm5-uart8-m2-overlay.dtbo \
+	rk3576-armsom-cm5-pwm2-ch4-m1-overlay.dtbo \
+	rk3576-armsom-cm5-pwm2-ch5-m0-overlay.dtbo \
+	rk3576-armsom-cm5-pwm2-ch6-m0-overlay.dtbo \
+	rk3576-armsom-cm5-pwm2-ch7-m0-overlay.dtbo \
 	rk3576-armsom-can0-m2-overlay.dtbo \
 	rk3576-armsom-can1-m1-overlay.dtbo \
 	rk3576-armsom-can1-m2-overlay.dtbo \

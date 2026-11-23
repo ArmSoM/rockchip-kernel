@@ -5,7 +5,7 @@
 	metadata {
 		title = "i2c3-m0";
 		category = "misc";
-		compatible = "armsom,rk3588-armsom-cm5-cm4-nano-b-io", "rockchip,rk3576-armsom-cm5-io";
+		compatible = "armsom,rk3588-armsom-cm5-cm4-nano-b-io", "rockchip,rk3576-armsom-cm5-io", "rockchip,rk3576-armsom-cm5-custom-io";
 		exclusive = "i2c3", "GPIO4_B4", "GPIO4_B5";
 	};
 

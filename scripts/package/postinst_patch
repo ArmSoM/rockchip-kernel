@@ -62,6 +62,19 @@ board_info() {
 		esac
 	fi
 				
+
+	# Kernel-supplied custom carriers follow the DTB/uEnv naming convention.
+	# Existing board mappings above take precedence.
+	if [ -z "${BOARD_DTB:-}" ] &&
+	   [[ "$2" =~ ^rk[0-9]+[a-z]?$ ]] &&
+	   [[ "$1" =~ ^armsom-[a-z0-9]+(-[a-z0-9]+)*$ ]] &&
+	   [ -f "/boot/dtb/$2-$1.dtb" ] &&
+	   [ -f "/boot/uEnv/uEnv$1.txt" ]; then
+		BOARD_NAME="$1"
+		BOARD_DTB="$2-$1.dtb"
+		BOARD_uEnv="uEnv$1.txt"
+	fi
+
 	echo "BOARD_NAME:"$BOARD_NAME
 	echo "BOARD_DTB:"$BOARD_DTB
 	echo "BOARD_uEnv:"$BOARD_uEnv

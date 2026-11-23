@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/dts-v1/;
+/plugin/;
+
+
+/ {
+	metadata {
+		title = "i2c8-m2";
+		category = "misc";
+		compatible = "rockchip,rk3576-armsom-cm5-custom-io";
+		exclusive = "i2c8", "GPIO2_B6", "GPIO2_B7";
+		description = "CUSTOM CARRIER ONLY. CN1-45=SCL, CN1-47=SDA (3.3 V). Replaces USB VBUS control/headphone detection. External pull-ups are required. Mutually exclusive with uart7-m0.";
+	};
+
+	fragment@0 {
+		target = <&i2c8>;
+		__overlay__ {
+			status = "okay";
+			pinctrl-names = "default";
+			pinctrl-0 = <&i2c8m2_xfer>;
+		};
+	};
+};

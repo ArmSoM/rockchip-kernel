@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/dts-v1/;
+/plugin/;
+
+
+/ {
+	metadata {
+		title = "pwm2-ch7-m2";
+		category = "misc";
+		compatible = "rockchip,rk3576-armsom-cm5-io", "rockchip,rk3576-armsom-cm5-custom-io";
+		exclusive = "pwm2-ch7", "GPIO2_D7";
+		description = "CN1-91 (3.3 V). Reuses the J25 camera clock. Disconnect the J25 camera. Mutually exclusive with imx219-cs0.";
+	};
+
+	fragment@0 {
+		target = <&pwm2_8ch_7>;
+		__overlay__ {
+			status = "okay";
+			pinctrl-names = "active";
+			pinctrl-0 = <&pwm2m2_ch7>;
+		};
+	};
+};

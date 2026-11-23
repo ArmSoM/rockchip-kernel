@@ -12,7 +12,7 @@
 		title = "display-1200x1900-10.1hd";
 		category = "display";
 		compatible = "rockchip,rk3576-armsom-cm5-io";
-		exclusive = "dsi", "pwm1-ch1", "GPIO0_C6", "GPIO0_C7", "GPIO0_C5", "GPIO0_D0";
+		exclusive = "dsi", "pwm1-ch1", "GPIO0_B5", "GPIO0_C6", "GPIO0_C7", "GPIO0_C5", "GPIO0_D0";
 	};
 
 	fragment@0 {

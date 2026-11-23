@@ -7,7 +7,7 @@
 	metadata {
 		title = "can1-m2";
 		category = "misc";
-		compatible = "rockchip,rk3576-armsom-cm5-io";
+		compatible = "rockchip,rk3576-armsom-cm5-io", "rockchip,rk3576-armsom-cm5-custom-io";
 		exclusive = "can1", "GPIO4_B4", "GPIO4_B5";
 	};
 

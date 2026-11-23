@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/dts-v1/;
+/plugin/;
+
+
+/ {
+	metadata {
+		title = "uart10-m2";
+		category = "misc";
+		compatible = "rockchip,rk3576-armsom-cm5-io", "rockchip,rk3576-armsom-cm5-custom-io";
+		exclusive = "uart10", "GPIO0_C4", "GPIO0_C5";
+		description = "CN1-20=TX, CN1-48=RX (3.3 V). Reuses IR/PWM and touch interrupt. Disconnect the display/touch device and IR receiver before use. No hardware flow control.";
+	};
+
+	fragment@0 {
+		target = <&uart10>;
+		__overlay__ {
+			status = "okay";
+			pinctrl-names = "default";
+			pinctrl-0 = <&uart10m2_xfer>;
+		};
+	};
+};

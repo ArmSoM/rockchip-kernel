@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/dts-v1/;
+/plugin/;
+
+
+/ {
+	metadata {
+		title = "pwm0-ch0-m3";
+		category = "misc";
+		compatible = "rockchip,rk3576-armsom-cm5-io", "rockchip,rk3576-armsom-cm5-custom-io";
+		exclusive = "pwm0-ch0", "GPIO3_B0";
+		description = "CN1-55 (3.3 V after the module level translator). Reuses J12 camera power-down. Disconnect the J12 camera. Shares PWM0 CH0 with pwm0-ch0-m0; they cannot be enabled together.";
+	};
+
+	fragment@0 {
+		target = <&pwm0_2ch_0>;
+		__overlay__ {
+			status = "okay";
+			pinctrl-names = "active";
+			pinctrl-0 = <&pwm0m3_ch0>;
+		};
+	};
+};

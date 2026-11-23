@@ -5,7 +5,7 @@
 	metadata {
 		title = "uart2-m1";
 		category = "misc";
-		compatible = "armsom,rk3588-armsom-cm5-cm4-nano-b-io", "rockchip,rk3576-armsom-cm5-io";
+		compatible = "armsom,rk3588-armsom-cm5-cm4-nano-b-io", "rockchip,rk3576-armsom-cm5-io", "rockchip,rk3576-armsom-cm5-custom-io";
 		exclusive = "uart2", "GPIO4_B4", "GPIO4_B5";
 	};
 

@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/dts-v1/;
+/plugin/;
+
+
+/ {
+	metadata {
+		title = "i2c5-m3";
+		category = "misc";
+		compatible = "rockchip,rk3576-armsom-cm5-io", "rockchip,rk3576-armsom-cm5-custom-io";
+		exclusive = "i2c5", "GPIO3_C4", "GPIO3_C1";
+		description = "CN1-80=SCL, CN1-82=SDA (3.3 V after the module level translator). Disconnect the J12 camera. Mutually exclusive with ov13850-cs1, uart11-m0 and can0-m3.";
+	};
+
+	fragment@0 {
+		target = <&i2c5>;
+		__overlay__ {
+			status = "okay";
+			pinctrl-names = "default";
+			pinctrl-0 = <&i2c5m3_xfer>;
+		};
+	};
+};
