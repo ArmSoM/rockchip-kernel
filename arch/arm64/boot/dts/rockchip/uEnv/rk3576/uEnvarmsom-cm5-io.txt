@@ -31,10 +31,10 @@ enable_uboot_overlays=1
 #dtoverlay=/dtb/overlay/rk3576-armsom-dp-disabled-overlay.dtbo
 
 # menu-group: Cameras
-# CAM0
-#dtoverlay=/dtb/overlay/rk3576-armsom-cm5-io-camera-imx219-cs0-overlay.dtbo
-# CAM1
-#dtoverlay=/dtb/overlay/rk3576-armsom-cm5-io-camera-ov13850-cs1-overlay.dtbo
+# Raspberry Camera V2 and ArmSoM Camera M2 share CAM0. M1 uses CAM1.
+#dtoverlay=/dtb/overlay/rk3576-armsom-cm5-io-raspberry-cam-v2-imx219-cs0-overlay.dtbo
+#dtoverlay=/dtb/overlay/rk3576-armsom-cm5-io-armsom-cam-m1-ov13850-cs1-overlay.dtbo
+#dtoverlay=/dtb/overlay/rk3576-armsom-cm5-io-armsom-cam-m2-imx219-cs0-overlay.dtbo
 
 
 # Module connector (disconnect the conflicting accessory)
