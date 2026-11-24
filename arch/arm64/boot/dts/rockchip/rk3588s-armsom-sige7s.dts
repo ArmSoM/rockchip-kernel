@@ -325,6 +325,10 @@
 	mem-supply = <&vdd_cpu_big1_mem_s0>;
 };
 
+&dmac1 {
+	arm,pl330-mcbufsz-bytes = <1024>;
+};
+
 &gpu {
 	mali-supply = <&vdd_gpu_s0>;
 	mem-supply = <&vdd_gpu_mem_s0>;
