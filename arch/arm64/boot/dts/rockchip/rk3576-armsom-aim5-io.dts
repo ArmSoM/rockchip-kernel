@@ -327,8 +327,8 @@
 		/omit-if-no-ref/
 		sdmmc0_det: sdmmc0-det {
 			rockchip,pins =
-				/* sdmmc0_detn */
-				<2 RK_PD4 1 &pcfg_pull_up>;
+				/* GPIO card detect on the carrier connector */
+				<2 RK_PD4 RK_FUNC_GPIO &pcfg_pull_up>;
 		};
 	};
 
@@ -448,15 +448,16 @@
 // };
 
 &sdmmc {
-	max-frequency = <200000000>;
+	max-frequency = <25000000>;
 	no-sdio;
 	no-mmc;
 	bus-width = <4>;
-	cap-mmc-highspeed;
-	cap-sd-highspeed;
 	disable-wp;
-	sd-uhs-sdr104;
+	/delete-property/ cap-mmc-highspeed;
+	/delete-property/ cap-sd-highspeed;
+	/delete-property/ sd-uhs-sdr104;
 	cd-gpios = <&gpio2 RK_PD4 GPIO_ACTIVE_LOW>;
+	vmmc-supply = <&vcc_3v3_s3>;
 	vqmmc-supply = <&vccio_sd_s0>;
 	status = "okay";
 };
